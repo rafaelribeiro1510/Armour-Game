@@ -9,7 +9,6 @@ public class TargetBehaviour : MonoBehaviour
     public BodyPartBehaviour.Type BodyType = BodyPartBehaviour.Type.Torso;
 
     SpriteRenderer sprite;
-    bool glowing = false;
     Color ogColor;
 
     [SerializeField]
@@ -27,12 +26,10 @@ public class TargetBehaviour : MonoBehaviour
     }
 
     public void startGlowing(){
-        if (glowing) return;
         StartBlink();
     }
 
     public void stopGlowing(){
-        if (!glowing) return;
         blinkTween.Kill(true);
     }
 

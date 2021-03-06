@@ -23,9 +23,11 @@ public class BodyPartBehaviour : MonoBehaviour
     [SerializeField]
     Ease returnEase = Ease.Linear;
     
-
-    bool IsGrabbed { get; set; }
+    [Header("While Being Grabbed parameters")]
     [SerializeField]
+    float shrinkPercent;
+
+    bool IsGrabbed;
     bool wrongPosition = true;
     
     Collider2D col;
@@ -38,7 +40,6 @@ public class BodyPartBehaviour : MonoBehaviour
         initialPos = transform.position;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.touchCount > 0){
@@ -46,9 +47,9 @@ public class BodyPartBehaviour : MonoBehaviour
             Vector2 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
 
             if (touch.phase == TouchPhase.Began){
-                Collider2D touchedCollider = Physics2D.OverlapPoint(touchPos);
-                if (col == touchedCollider){
+                if (col == Physics2D.OverlapPoint(touchPos)){
                     IsGrabbed = true;
+                    transform.DOScale(shrinkPercent, 0.1f);
                 }
             }
 
@@ -58,6 +59,8 @@ public class BodyPartBehaviour : MonoBehaviour
 
             else if (touch.phase == TouchPhase.Ended){
                 IsGrabbed = false;
+                transform.DOScale(1, 0.1f);
+
                 if (transform.position != initialPos){
                     if (wrongPosition)  
                         transform.DOMove(initialPos, returnDuration).SetEase(returnEase);
