@@ -5,68 +5,58 @@ using DG.Tweening;
 
 public class BodyPartBehaviour : MonoBehaviour
 {
-    public enum Type{
-        Head,
-        Torso,
-        LArm,
-        RArm,
-        LLeg,
-        RLeg
-    }
-    
-    [SerializeField]
-    Type BodyType = Type.Torso;
+    private Camera _camera;
+
+    [SerializeField] Type bodyType = Type.Torso;
 
     [Header("Return parameters")]
-    [SerializeField]
-    float returnDuration;
-    [SerializeField]
-    Ease returnEase = Ease.Linear;
+    [SerializeField] float returnDuration;
+    [SerializeField] Ease returnEase = Ease.Linear;
     
     [Header("While Being Grabbed parameters")]
-    [SerializeField]
-    float shrinkPercent;
+    [SerializeField] float shrinkPercent;
 
-    bool IsGrabbed;
-    bool wrongPosition = true;
+    bool _isGrabbed;
+    bool _notOnTopOfTarget = true;
     
-    Collider2D col;
-    Vector3 initialPos;
+    Collider2D _collider;
+    Vector3 _initialPosition;
 
-    TargetBehaviour currHovering;
-    
+    TargetBehaviour _currHovering;
+
     void Awake() {
-        col = GetComponent<Collider2D>();    
-        initialPos = transform.position;
+        _camera = Camera.main;
+        _collider = GetComponent<Collider2D>();    
+        _initialPosition = transform.position;
     }
 
     void Update()
     {
         if (Input.touchCount > 0){
             Touch touch = Input.GetTouch(0);
-            Vector2 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
+            Vector2 touchPos = _camera.ScreenToWorldPoint(touch.position);
 
             if (touch.phase == TouchPhase.Began){
-                if (col == Physics2D.OverlapPoint(touchPos)){
-                    IsGrabbed = true;
+                if (_collider == Physics2D.OverlapPoint(touchPos)){
+                    _isGrabbed = true;
                     transform.DOScale(shrinkPercent, 0.1f);
                 }
             }
 
-            else if (touch.phase == TouchPhase.Moved && IsGrabbed){
+            else if (touch.phase == TouchPhase.Moved && _isGrabbed){
                 transform.position = touchPos;
             }
 
             else if (touch.phase == TouchPhase.Ended){
-                IsGrabbed = false;
+                _isGrabbed = false;
                 transform.DOScale(1, 0.1f);
 
-                if (transform.position != initialPos){
-                    if (wrongPosition)  
-                        transform.DOMove(initialPos, returnDuration).SetEase(returnEase);
+                if (transform.position != _initialPosition){
+                    if (_notOnTopOfTarget)  
+                        transform.DOMove(_initialPosition, returnDuration).SetEase(returnEase); // Ease to starting position
                     else{
-                        transform.DOMove(currHovering.transform.position, returnDuration/2).SetEase(returnEase);
-                        currHovering.stopGlowing();
+                        transform.DOMove(_currHovering.transform.position, returnDuration/2).SetEase(returnEase); // Ease to target
+                        _currHovering.stopGlowing();
                     }
                 }
             }
@@ -75,21 +65,20 @@ public class BodyPartBehaviour : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other) {
         if (other.CompareTag("Target")){
-            if (currHovering == null) currHovering = other.GetComponent<TargetBehaviour>();
-            else print("Uhhh currHovering aint null cuh");
+            if (_currHovering == null) _currHovering = other.GetComponent<TargetBehaviour>();
 
-            if (currHovering.BodyType == this.BodyType){
-                wrongPosition = false;
-                currHovering.startGlowing();
+            if (_currHovering.BodyType == this.bodyType){
+                _notOnTopOfTarget = false;
+                _currHovering.startGlowing();
             }
         }
     }
 
     void OnTriggerExit2D(Collider2D other) {
         if (other.CompareTag("Target")){
-            wrongPosition = true;
-            currHovering.stopGlowing();
-            currHovering = null;
+            _notOnTopOfTarget = true;
+            _currHovering.stopGlowing();
+            _currHovering = null;
         }
     }
 }
