@@ -1,19 +1,25 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 public class DrawersController : MonoBehaviour
 {
     List<SingleDrawerBehaviour> Drawers = new List<SingleDrawerBehaviour>();
-    
+    List<SingleDrawerBehaviour> ActiveDrawers = new List<SingleDrawerBehaviour>(2);
 
+    [SerializeField] private Object BodyPartPrefab;
+    
     private void Awake() {
         foreach(Transform child in transform) Drawers.Add(child.GetComponent<SingleDrawerBehaviour>());
     }
 
     private void Start() {
         GenerateRandomPairsOfDrawers();
+        GenerateBodyParts();
     }
 
     void GenerateRandomPairsOfDrawers(){
@@ -27,10 +33,34 @@ public class DrawersController : MonoBehaviour
 
             drawer1.pair = drawer2;
             drawer2.pair = drawer1;
-
-            print("Made pair from " + id1 + " and " + id2);
         }
+    }
 
+    private void GenerateBodyParts()
+    {
+        List<SingleDrawerBehaviour> fullDrawers = new List<SingleDrawerBehaviour>();
 
+        foreach (Type bodyType in Enum.GetValues(typeof(Type)))
+        {
+            SingleDrawerBehaviour randomDrawer = Drawers[0];
+            while(fullDrawers.Contains(randomDrawer)) randomDrawer = Drawers[Random.Range(0, Drawers.Count)];
+            fullDrawers.Add(randomDrawer);
+            
+            GameObject newBodyPart = Instantiate(BodyPartPrefab, randomDrawer._transform) as GameObject;
+            BodyPartBehaviour newBodyPartBehaviour = newBodyPart.GetComponent<BodyPartBehaviour>();
+
+            newBodyPartBehaviour.SetState(bodyType, State.Ghost); // TODO Change this after adding real sprites (foreach loop for State)
+        }
+    }
+
+    public void ActivatePair(SingleDrawerBehaviour drawer1, SingleDrawerBehaviour drawer2) {
+        if (ActiveDrawers.Contains(drawer1) || ActiveDrawers.Contains(drawer2)) return;
+        
+        if (ActiveDrawers.Count != 0)
+            foreach (var oldDrawer in ActiveDrawers) {
+                oldDrawer.Close();
+            }
+        
+        ActiveDrawers = new List<SingleDrawerBehaviour>(){drawer1, drawer2}; 
     }
 }

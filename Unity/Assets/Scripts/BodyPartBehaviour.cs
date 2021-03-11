@@ -7,7 +7,9 @@ public class BodyPartBehaviour : MonoBehaviour
 {
     private Camera _camera;
 
-    [SerializeField] Type bodyType = Type.Torso;
+    public Type bodyType;
+    public State bodyState;
+    BodyPartSprites spriteController;
 
     [Header("Return parameters")]
     [SerializeField] float returnDuration;
@@ -28,6 +30,9 @@ public class BodyPartBehaviour : MonoBehaviour
         _camera = Camera.main;
         _collider = GetComponent<Collider2D>();    
         _initialPosition = transform.position;
+
+        spriteController = GetComponentInChildren<BodyPartSprites>();
+        spriteController.SetSprite(bodyType, bodyState);
     }
 
     void Update()
@@ -80,5 +85,12 @@ public class BodyPartBehaviour : MonoBehaviour
             _currHovering.stopGlowing();
             _currHovering = null;
         }
+    }
+
+    public void SetState(Type type, State state)
+    {
+        bodyType = type;
+        bodyState = state;
+        spriteController.SetSprite(type, state);
     }
 }

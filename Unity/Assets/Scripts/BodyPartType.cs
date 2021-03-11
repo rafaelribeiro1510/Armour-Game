@@ -6,3 +6,8 @@
     LLeg,
     RLeg
 }
+
+public enum State {
+    Ghost,
+    Real
+}

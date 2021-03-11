@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
@@ -7,18 +6,20 @@ using DG.Tweening;
 public class SingleDrawerBehaviour : MonoBehaviour
 {
     public SingleDrawerBehaviour pair;
+    public DrawersController controller;
 
     private Camera _camera;
-    private Transform _transform;
+    public Transform _transform;
     private Vector3 _transformPosition;
     
     [Header("Drawer stuff")]
-    [SerializeField] float moveRange = 2.4f;
+    [SerializeField] float moveRange;
     bool _placedHorizontally;
     bool _placedOnTheLeft;
     bool _placedOnTheBottom;
+    [SerializeField] private float dragScale;
     
-    [SerializeField] float _movementPercentage = 0;
+    public float _movementPercentage = 0;
     Vector3 _startingPosition;
     Vector3 _finalPosition;
     Vector3 _targetPosition;
@@ -32,6 +33,7 @@ public class SingleDrawerBehaviour : MonoBehaviour
 
     private void Awake() {
         _camera = Camera.main;
+        controller = GetComponentInParent<DrawersController>();
         _collider = GetComponent<Collider2D>();
         _transform = transform;
         
@@ -57,12 +59,13 @@ public class SingleDrawerBehaviour : MonoBehaviour
                 if (_collider == Physics2D.OverlapPoint(touchPos)){
                     _isGrabbed = true;
                     _transform.DOScale(shrinkPercent, 0.1f);
+                    pair._transform.DOScale(shrinkPercent, 0.1f);
                     _grabPos = touchPos;
                 }
             }
 
             else if (touch.phase == TouchPhase.Moved && _isGrabbed){
-                Vector2 difference = touchPos - _grabPos;
+                Vector2 difference = touchPos - _grabPos; difference.Scale(new Vector2(dragScale,dragScale));
                 _targetPosition = _placedHorizontally 
                 ? new Vector3(_transform.position.x + difference.x, _transform.position.y) 
                 : new Vector3(_transform.position.x, _transform.position.y + difference.y);
@@ -70,16 +73,22 @@ public class SingleDrawerBehaviour : MonoBehaviour
                 _targetPosition = Utils.NormalizedWithBounds(_targetPosition, _startingPosition, _finalPosition);
                 _movementPercentage = Utils.Vector3InverseLerp(_startingPosition, _finalPosition, _targetPosition);
                 
-                // So drawers don't stay stuck in awkward mid positions
-                if (_movementPercentage < 0.4f)
-                    DOTween.To(() => _movementPercentage, x => _movementPercentage = x, 0, 0.1f);
-                else if (_movementPercentage > 0.6f) 
-                    DOTween.To(() => _movementPercentage, x => _movementPercentage = x, 1, 0.1f);
             }
 
-            else if (touch.phase == TouchPhase.Ended){
+            else if (touch.phase == TouchPhase.Ended && _isGrabbed){
                 _isGrabbed = false;
                 _transform.DOScale(1, 0.1f);
+                pair._transform.DOScale(1, 0.1f);
+                
+                
+                // So drawers don't stay stuck in awkward mid positions
+                if (_movementPercentage < 0.75f) {
+                    Close();
+                }
+                else if (_movementPercentage >= 0.75f) {
+                    Open();
+                    controller.ActivatePair(this, pair);
+                }
             }
         }
         
@@ -87,5 +96,14 @@ public class SingleDrawerBehaviour : MonoBehaviour
         if (pair) pair._movementPercentage = _movementPercentage;
         _transform.position = Vector3.Lerp(_startingPosition, _finalPosition, _movementPercentage);
 
+    }
+
+    private void Open()
+    {
+        DOTween.To(() => _movementPercentage, x => _movementPercentage = x, 1, 0.1f);
+    }
+
+    public void Close() {
+        DOTween.To(() => _movementPercentage, x => _movementPercentage = x, 0, 0.25f);
     }
 }
