@@ -40,7 +40,7 @@ public class DrawersController : MonoBehaviour
     {
         List<SingleDrawerBehaviour> fullDrawers = new List<SingleDrawerBehaviour>();
 
-        foreach (Type bodyType in Enum.GetValues(typeof(Type)))
+        foreach (BodyPartType bodyType in Enum.GetValues(typeof(BodyPartType)))
         {
             SingleDrawerBehaviour randomDrawer = Drawers[0];
             while(fullDrawers.Contains(randomDrawer)) randomDrawer = Drawers[Random.Range(0, Drawers.Count)];
@@ -49,8 +49,8 @@ public class DrawersController : MonoBehaviour
             GameObject newBodyPart = Instantiate(BodyPartPrefab, randomDrawer._transform) as GameObject;
             BodyPartBehaviour newBodyPartBehaviour = newBodyPart.GetComponent<BodyPartBehaviour>();
 
-            newBodyPartBehaviour.SetState(bodyType, State.Ghost); // TODO Change this after adding real sprites (foreach loop for State)
-        }
+            newBodyPartBehaviour.SetState(bodyType, BodyPartState.Ghost); // TODO Change this after adding real sprites (foreach loop for State)
+        }   
     }
 
     public void ActivatePair(SingleDrawerBehaviour drawer1, SingleDrawerBehaviour drawer2) {

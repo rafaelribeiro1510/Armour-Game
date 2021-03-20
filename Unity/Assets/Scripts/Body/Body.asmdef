@@ -1,0 +1,16 @@
+{
+    "name": "Body",
+    "references": [
+        "GUID:7c38c05ca4326974283d9992fd067a12",
+        "GUID:a22d0bfd2f86f89489fe485e932fb479"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

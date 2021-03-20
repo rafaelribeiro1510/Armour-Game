@@ -7,8 +7,8 @@ public class BodyPartBehaviour : MonoBehaviour
 {
     private Camera _camera;
 
-    public Type bodyType;
-    public State bodyState;
+    public BodyPartType bodyBodyPartType;
+    public BodyPartState bodyBodyPartState;
     BodyPartSprites spriteController;
 
     [Header("Return parameters")]
@@ -32,7 +32,7 @@ public class BodyPartBehaviour : MonoBehaviour
         _initialPosition = transform.position;
 
         spriteController = GetComponentInChildren<BodyPartSprites>();
-        spriteController.SetSprite(bodyType, bodyState);
+        spriteController.SetSprite(bodyBodyPartType, bodyBodyPartState);
     }
 
     void Update()
@@ -72,7 +72,7 @@ public class BodyPartBehaviour : MonoBehaviour
         if (other.CompareTag("Target")){
             if (_currHovering == null) _currHovering = other.GetComponent<TargetBehaviour>();
 
-            if (_currHovering.BodyType == this.bodyType){
+            if (_currHovering.BodyType == this.bodyBodyPartType){
                 _notOnTopOfTarget = false;
                 _currHovering.startGlowing();
             }
@@ -87,10 +87,10 @@ public class BodyPartBehaviour : MonoBehaviour
         }
     }
 
-    public void SetState(Type type, State state)
+    public void SetState(BodyPartType bodyPartType, BodyPartState bodyPartState)
     {
-        bodyType = type;
-        bodyState = state;
-        spriteController.SetSprite(type, state);
+        bodyBodyPartType = bodyPartType;
+        bodyBodyPartState = bodyPartState;
+        spriteController.SetSprite(bodyPartType, bodyPartState);
     }
 }

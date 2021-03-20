@@ -1,4 +1,4 @@
-﻿public enum Type{
+﻿public enum BodyPartType{
     Head,
     Torso,
     LArm,
@@ -7,7 +7,7 @@
     RLeg
 }
 
-public enum State {
+public enum BodyPartState {
     Ghost,
     Real
 }

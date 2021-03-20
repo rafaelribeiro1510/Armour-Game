@@ -1,0 +1,16 @@
+{
+    "name": "Target",
+    "references": [
+        "GUID:f5668de8dcc970e4aaa010997c195ebd",
+        "GUID:a22d0bfd2f86f89489fe485e932fb479"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

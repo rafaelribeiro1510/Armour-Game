@@ -6,7 +6,7 @@ using DG.Tweening;
 
 public class TargetBehaviour : MonoBehaviour
 {
-    public Type BodyType;
+    public BodyPartType BodyType;
 
     SpriteRenderer sprite;
     Color ogColor;

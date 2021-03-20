@@ -19,6 +19,7 @@ public class SingleDrawerBehaviour : MonoBehaviour
     bool _placedOnTheBottom;
     [SerializeField] private float dragScale;
     
+    [SerializeField]
     public float _movementPercentage = 0;
     Vector3 _startingPosition;
     Vector3 _finalPosition;
@@ -73,13 +74,14 @@ public class SingleDrawerBehaviour : MonoBehaviour
                 _targetPosition = Utils.NormalizedWithBounds(_targetPosition, _startingPosition, _finalPosition);
                 _movementPercentage = Utils.Vector3InverseLerp(_startingPosition, _finalPosition, _targetPosition);
                 
+                // Make sure pairs move together 
+                if (pair) pair._movementPercentage = _movementPercentage;
             }
 
             else if (touch.phase == TouchPhase.Ended && _isGrabbed){
                 _isGrabbed = false;
                 _transform.DOScale(1, 0.1f);
                 pair._transform.DOScale(1, 0.1f);
-                
                 
                 // So drawers don't stay stuck in awkward mid positions
                 if (_movementPercentage < 0.75f) {
@@ -92,18 +94,19 @@ public class SingleDrawerBehaviour : MonoBehaviour
             }
         }
         
-        // Make sure pairs move together 
-        if (pair) pair._movementPercentage = _movementPercentage;
         _transform.position = Vector3.Lerp(_startingPosition, _finalPosition, _movementPercentage);
-
     }
 
     private void Open()
     {
+        DOTween.KillAll();
         DOTween.To(() => _movementPercentage, x => _movementPercentage = x, 1, 0.1f);
+        DOTween.To(() => pair._movementPercentage, x =>pair. _movementPercentage = x, 1, 0.1f);
     }
 
     public void Close() {
+        DOTween.KillAll();
         DOTween.To(() => _movementPercentage, x => _movementPercentage = x, 0, 0.25f);
+        DOTween.To(() => pair._movementPercentage, x => pair._movementPercentage = x, 0, 0.25f);
     }
 }
