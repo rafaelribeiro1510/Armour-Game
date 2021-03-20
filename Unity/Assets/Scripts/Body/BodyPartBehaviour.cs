@@ -22,17 +22,18 @@ public class BodyPartBehaviour : MonoBehaviour
     bool _notOnTopOfTarget = true;
     
     Collider2D _collider;
-    Vector3 _initialPosition;
+    Transform _parentTransform;
 
     TargetBehaviour _currHovering;
 
     void Awake() {
         _camera = Camera.main;
-        _collider = GetComponent<Collider2D>();    
-        _initialPosition = transform.position;
+        _collider = GetComponent<Collider2D>();
+        _parentTransform = transform.parent;
 
         spriteController = GetComponentInChildren<BodyPartSprites>();
         spriteController.SetSprite(bodyBodyPartType, bodyBodyPartState);
+        
     }
 
     void Update()
@@ -56,9 +57,9 @@ public class BodyPartBehaviour : MonoBehaviour
                 _isGrabbed = false;
                 transform.DOScale(1, 0.1f);
 
-                if (transform.position != _initialPosition){
+                if (transform.position != _parentTransform.position){
                     if (_notOnTopOfTarget)  
-                        transform.DOMove(_initialPosition, returnDuration).SetEase(returnEase); // Ease to starting position
+                        transform.DOMove(_parentTransform.position, returnDuration).SetEase(returnEase); // Ease to starting position
                     else{
                         transform.DOMove(_currHovering.transform.position, returnDuration/2).SetEase(returnEase); // Ease to target
                         _currHovering.stopGlowing();

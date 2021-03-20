@@ -14,11 +14,11 @@ public class WhiteBarScript : MonoBehaviour
         drawer = GetComponentInParent<SingleDrawerBehaviour>();
         _transform = transform;
         _transform.parent = null;
-        maxScale = _transform.localScale.y;
+        maxScale = _transform.localScale.x;
     }
 
     void Update()
     {
-        _transform.localScale = new Vector3(_transform.localScale.x, Mathf.Lerp(maxScale, 0, drawer._movementPercentage), _transform.localScale.z);
+        _transform.localScale = new Vector3(Mathf.Lerp(maxScale, 0, drawer._movementPercentage), _transform.localScale.y,  _transform.localScale.z);
     }
 }
