@@ -7,7 +7,7 @@ using DG.Tweening;
 public class SingleDrawerBehaviour : MonoBehaviour
 {
     [HideInInspector] public SingleDrawerBehaviour pair;
-    DrawersController _controller;
+    GameController _controller;
 
     private Camera _camera;
     [HideInInspector] public Transform _transform;
@@ -51,12 +51,13 @@ public class SingleDrawerBehaviour : MonoBehaviour
 
     private void Start()
     {
-        _controller = DrawersController.Instance;
+        _controller = GameController.Instance;
     }
 
     void Update()
     {
         if (Input.touchCount > 0){
+
             Touch touch = Input.GetTouch(0);
             Vector2 touchPos = _camera.ScreenToWorldPoint(touch.position);
 

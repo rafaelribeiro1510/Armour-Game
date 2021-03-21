@@ -13,7 +13,7 @@ public class TargetBehaviour : MonoBehaviour
     
     public BodyPartType BodyType;
     TargetSprites _spriteController;
-    DrawersController _drawerController;
+    GameController _drawerController;
     SpriteRenderer _renderer;
     Color _originalColor;
 
@@ -30,7 +30,7 @@ public class TargetBehaviour : MonoBehaviour
 
     private void Start()
     {
-        _drawerController = DrawersController.Instance;
+        _drawerController = GameController.Instance;
         _spriteController.SetSprite(BodyType);
     }
 

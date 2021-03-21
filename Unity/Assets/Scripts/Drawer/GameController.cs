@@ -6,15 +6,15 @@ using System.Linq;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
-public class DrawersController : MonoBehaviour
+public class GameController : MonoBehaviour
 {
-    static DrawersController _instance;
-    public static DrawersController Instance { get { return _instance; } }
+    static GameController _instance;
+    public static GameController Instance { get { return _instance; } }
     
     List<SingleDrawerBehaviour> Drawers = new List<SingleDrawerBehaviour>();
     List<SingleDrawerBehaviour> ActiveDrawers = new List<SingleDrawerBehaviour>(2);
 
-    [SerializeField] private Object BodyPartPrefab;
+    [SerializeField] Object BodyPartPrefab;
     
     private void Awake() {
         if (_instance != null && _instance != this)
