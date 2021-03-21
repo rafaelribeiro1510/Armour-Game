@@ -2,9 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class BodyPartSprites : MonoBehaviour
 {
+    [SerializeField] private float colliderScaleFactor;
+    
     private SpriteRenderer _renderer;
     
     [Serializable] public struct MakeShiftDictionaryEntry
@@ -27,5 +30,13 @@ public class BodyPartSprites : MonoBehaviour
         if (!_sprites.ContainsKey(bodyPartType)) return;
         
         _renderer.sprite = _sprites[bodyPartType][bodyPartState == BodyPartState.Outline ? 0 : 1];
+
+        BoxCollider2D col;
+        if (GetComponent<BoxCollider2D>() == null)
+        {
+            col = gameObject.AddComponent<BoxCollider2D>();
+            col.size = new Vector3( col.size.x + colliderScaleFactor, col.size.y + colliderScaleFactor, 1f);
+        }
+        
     }
 }

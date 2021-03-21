@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
@@ -6,7 +7,7 @@ using DG.Tweening;
 public class SingleDrawerBehaviour : MonoBehaviour
 {
     [HideInInspector] public SingleDrawerBehaviour pair;
-    [HideInInspector] public DrawersController controller;
+    DrawersController _controller;
 
     private Camera _camera;
     [HideInInspector] public Transform _transform;
@@ -33,7 +34,6 @@ public class SingleDrawerBehaviour : MonoBehaviour
 
     private void Awake() {
         _camera = Camera.main;
-        controller = GetComponentInParent<DrawersController>();
         _collider = GetComponent<Collider2D>();
         _transform = transform;
         
@@ -48,7 +48,12 @@ public class SingleDrawerBehaviour : MonoBehaviour
                     (_placedHorizontally?0:moveRange)*(_placedOnTheBottom?1:-1)
                     );
     }
-    
+
+    private void Start()
+    {
+        _controller = DrawersController.Instance;
+    }
+
     void Update()
     {
         if (Input.touchCount > 0){
@@ -88,7 +93,7 @@ public class SingleDrawerBehaviour : MonoBehaviour
                 }
                 else if (_movementPercentage >= 0.75f) {
                     Open();
-                    controller.ActivatePair(this, pair);
+                    _controller.ActivatePair(this, pair);
                 }
             }
         }
@@ -98,13 +103,11 @@ public class SingleDrawerBehaviour : MonoBehaviour
 
     private void Open()
     {
-        DOTween.KillAll();
         DOTween.To(() => _movementPercentage, x => _movementPercentage = x, 1, 0.1f);
         DOTween.To(() => pair._movementPercentage, x =>pair. _movementPercentage = x, 1, 0.1f);
     }
 
     public void Close() {
-        DOTween.KillAll();
         DOTween.To(() => _movementPercentage, x => _movementPercentage = x, 0, 0.25f);
         DOTween.To(() => pair._movementPercentage, x => pair._movementPercentage = x, 0, 0.25f);
     }

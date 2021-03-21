@@ -2,7 +2,10 @@
     "name": "Target",
     "references": [
         "GUID:f5668de8dcc970e4aaa010997c195ebd",
-        "GUID:a22d0bfd2f86f89489fe485e932fb479"
+        "GUID:a22d0bfd2f86f89489fe485e932fb479",
+        "GUID:9878bc8a0bb58ba409e9871f6dad4d65",
+        "GUID:e74d259c577d0c743be8361924bbb585",
+        "GUID:043f0c46c0ca0064caec9d119e3a7bf9"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

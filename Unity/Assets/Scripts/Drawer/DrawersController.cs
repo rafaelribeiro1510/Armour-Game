@@ -8,13 +8,22 @@ using Random = UnityEngine.Random;
 
 public class DrawersController : MonoBehaviour
 {
+    static DrawersController _instance;
+    public static DrawersController Instance { get { return _instance; } }
+    
     List<SingleDrawerBehaviour> Drawers = new List<SingleDrawerBehaviour>();
     List<SingleDrawerBehaviour> ActiveDrawers = new List<SingleDrawerBehaviour>(2);
 
     [SerializeField] private Object BodyPartPrefab;
     
     private void Awake() {
-        foreach(Transform child in transform) Drawers.Add(child.GetComponent<SingleDrawerBehaviour>());
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        } else {
+            _instance = this;
+            foreach(Transform child in transform) Drawers.Add(child.GetComponent<SingleDrawerBehaviour>());
+        }
     }
 
     private void Start() {
@@ -52,6 +61,7 @@ public class DrawersController : MonoBehaviour
                 BodyPartBehaviour newBodyPartBehaviour = newBodyPart.GetComponent<BodyPartBehaviour>();
 
                 newBodyPart.name = bodyType.ToString();
+                newBodyPart.tag = bodyType.ToString();
                 newBodyPart.transform.rotation = Quaternion.identity;
                 newBodyPartBehaviour.SetState(bodyType, bodyState);
             }   

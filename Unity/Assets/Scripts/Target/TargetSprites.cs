@@ -26,6 +26,10 @@ public class TargetSprites : MonoBehaviour
     {
         if (!_sprites.ContainsKey(bodyPartType)) return;
 
-        _renderer.sprite = _sprites[bodyPartType]; 
+        _renderer.sprite = _sprites[bodyPartType];
+
+        BoxCollider2D col = gameObject.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        tag = bodyPartType.ToString();
     }
 }
