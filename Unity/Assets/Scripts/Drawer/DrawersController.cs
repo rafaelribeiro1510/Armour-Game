@@ -40,17 +40,22 @@ public class DrawersController : MonoBehaviour
     {
         List<SingleDrawerBehaviour> fullDrawers = new List<SingleDrawerBehaviour>();
 
-        foreach (BodyPartType bodyType in Enum.GetValues(typeof(BodyPartType)))
+        foreach (BodyPartState bodyState in Enum.GetValues(typeof(BodyPartState)))
         {
-            SingleDrawerBehaviour randomDrawer = Drawers[0];
-            while(fullDrawers.Contains(randomDrawer)) randomDrawer = Drawers[Random.Range(0, Drawers.Count)];
-            fullDrawers.Add(randomDrawer);
-            
-            GameObject newBodyPart = Instantiate(BodyPartPrefab, randomDrawer._transform) as GameObject;
-            BodyPartBehaviour newBodyPartBehaviour = newBodyPart.GetComponent<BodyPartBehaviour>();
+            foreach (BodyPartType bodyType in Enum.GetValues(typeof(BodyPartType)))
+            {
+                SingleDrawerBehaviour randomDrawer = Drawers[0];
+                while(fullDrawers.Contains(randomDrawer)) randomDrawer = Drawers[Random.Range(0, Drawers.Count)];
+                fullDrawers.Add(randomDrawer);
+                
+                GameObject newBodyPart = Instantiate(BodyPartPrefab, randomDrawer._transform) as GameObject;
+                BodyPartBehaviour newBodyPartBehaviour = newBodyPart.GetComponent<BodyPartBehaviour>();
 
-            newBodyPartBehaviour.SetState(bodyType, BodyPartState.Ghost); // TODO Change this after adding real sprites (foreach loop for State)
-        }   
+                newBodyPart.name = bodyType.ToString();
+                newBodyPart.transform.rotation = Quaternion.identity;
+                newBodyPartBehaviour.SetState(bodyType, bodyState);
+            }   
+        }
     }
 
     public void ActivatePair(SingleDrawerBehaviour drawer1, SingleDrawerBehaviour drawer2) {
@@ -61,6 +66,6 @@ public class DrawersController : MonoBehaviour
                 oldDrawer.Close();
             }
         
-        ActiveDrawers = new List<SingleDrawerBehaviour>(){drawer1, drawer2}; 
+        if ((object)drawer1 != null && (object)drawer2 != null) ActiveDrawers = new List<SingleDrawerBehaviour>(){drawer1, drawer2}; 
     }
 }

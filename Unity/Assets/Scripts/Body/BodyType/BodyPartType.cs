@@ -1,13 +1,13 @@
 ﻿public enum BodyPartType{
     Head,
     Torso,
-    LArm,
-    RArm,
-    LLeg,
-    RLeg
+    ArmL,
+    ArmR,
+    LegL,
+    LegR
 }
 
 public enum BodyPartState {
-    Ghost,
-    Real
+    Outline,
+    Filling
 }

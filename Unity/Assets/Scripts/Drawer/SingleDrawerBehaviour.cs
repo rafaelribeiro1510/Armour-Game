@@ -5,11 +5,11 @@ using DG.Tweening;
 
 public class SingleDrawerBehaviour : MonoBehaviour
 {
-    public SingleDrawerBehaviour pair;
-    public DrawersController controller;
+    [HideInInspector] public SingleDrawerBehaviour pair;
+    [HideInInspector] public DrawersController controller;
 
     private Camera _camera;
-    public Transform _transform;
+    [HideInInspector] public Transform _transform;
     private Vector3 _transformPosition;
     
     [Header("Drawer stuff")]
@@ -19,8 +19,7 @@ public class SingleDrawerBehaviour : MonoBehaviour
     bool _placedOnTheBottom;
     [SerializeField] private float dragScale;
     
-    [SerializeField]
-    public float _movementPercentage = 0;
+    [HideInInspector] public float _movementPercentage = 0;
     Vector3 _startingPosition;
     Vector3 _finalPosition;
     Vector3 _targetPosition;

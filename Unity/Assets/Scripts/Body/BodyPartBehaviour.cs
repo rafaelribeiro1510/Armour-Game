@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
@@ -19,7 +20,7 @@ public class BodyPartBehaviour : MonoBehaviour
     [SerializeField] float shrinkPercent;
 
     bool _isGrabbed;
-    bool _notOnTopOfTarget = true;
+    bool _onTopOfTarget = false;
     
     Collider2D _collider;
     Transform _parentTransform;
@@ -32,8 +33,11 @@ public class BodyPartBehaviour : MonoBehaviour
         _parentTransform = transform.parent;
 
         spriteController = GetComponentInChildren<BodyPartSprites>();
+    }
+
+    private void Start()
+    {
         spriteController.SetSprite(bodyBodyPartType, bodyBodyPartState);
-        
     }
 
     void Update()
@@ -58,7 +62,7 @@ public class BodyPartBehaviour : MonoBehaviour
                 transform.DOScale(1, 0.1f);
 
                 if (transform.position != _parentTransform.position){
-                    if (_notOnTopOfTarget)  
+                    if (!_onTopOfTarget)  
                         transform.DOMove(_parentTransform.position, returnDuration).SetEase(returnEase); // Ease to starting position
                     else{
                         transform.DOMove(_currHovering.transform.position, returnDuration/2).SetEase(returnEase); // Ease to target
@@ -71,10 +75,13 @@ public class BodyPartBehaviour : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other) {
         if (other.CompareTag("Target")){
+            if (other.name != "Target" + name) return;
+            
             if (_currHovering == null) _currHovering = other.GetComponent<TargetBehaviour>();
 
-            if (_currHovering.BodyType == this.bodyBodyPartType){
-                _notOnTopOfTarget = false;
+            if (_currHovering.BodyType == this.bodyBodyPartType)
+            {
+                _onTopOfTarget = true;
                 _currHovering.startGlowing();
             }
         }
@@ -82,9 +89,12 @@ public class BodyPartBehaviour : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D other) {
         if (other.CompareTag("Target")){
-            _notOnTopOfTarget = true;
-            _currHovering.stopGlowing();
-            _currHovering = null;
+            _onTopOfTarget = false;
+            if (_currHovering != null)
+            {
+                _currHovering.stopGlowing();
+                _currHovering = null;
+            }
         }
     }
 

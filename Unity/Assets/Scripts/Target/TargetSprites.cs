@@ -3,29 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BodyPartSprites : MonoBehaviour
+public class TargetSprites : MonoBehaviour
 {
     private SpriteRenderer _renderer;
     
     [Serializable] public struct MakeShiftDictionaryEntry
     {
         public BodyPartType key;
-        public List<Sprite> sprites;
+        public Sprite sprite;
     }
 
     [SerializeField] private List<MakeShiftDictionaryEntry> spriteDictionary = new List<MakeShiftDictionaryEntry>();
-    Dictionary<BodyPartType, List<Sprite>> _sprites = new Dictionary<BodyPartType, List<Sprite>>();
+    Dictionary<BodyPartType, Sprite> _sprites = new Dictionary<BodyPartType, Sprite>();
     
     void Awake() 
     {
         _renderer = GetComponent<SpriteRenderer>();
-        foreach (var dictEntry in spriteDictionary) _sprites.Add(dictEntry.key, dictEntry.sprites);
+        foreach (var dictEntry in spriteDictionary) _sprites.Add(dictEntry.key, dictEntry.sprite);
     }
 
-    public void SetSprite(BodyPartType bodyPartType, BodyPartState bodyPartState)
+    public void SetSprite(BodyPartType bodyPartType)
     {
         if (!_sprites.ContainsKey(bodyPartType)) return;
-        
-        _renderer.sprite = _sprites[bodyPartType][bodyPartState == BodyPartState.Outline ? 0 : 1];
+
+        _renderer.sprite = _sprites[bodyPartType]; 
     }
 }

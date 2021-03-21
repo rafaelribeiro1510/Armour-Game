@@ -13,7 +13,7 @@ public class WhiteBarScript : MonoBehaviour
     {
         drawer = GetComponentInParent<SingleDrawerBehaviour>();
         _transform = transform;
-        _transform.parent = null;
+        _transform.parent = GameObject.Find("WhiteBars").transform;
         maxScale = _transform.localScale.x;
     }
 

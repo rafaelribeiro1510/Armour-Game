@@ -7,9 +7,10 @@ using DG.Tweening;
 public class TargetBehaviour : MonoBehaviour
 {
     public BodyPartType BodyType;
+    private TargetSprites spriteController;
 
-    SpriteRenderer sprite;
-    Color ogColor;
+    SpriteRenderer _renderer;
+    Color originalColor;
 
     [SerializeField]
     float blinkDuration;
@@ -17,12 +18,19 @@ public class TargetBehaviour : MonoBehaviour
 
     void StartBlink() {
         blinkTween = DOTween.Sequence();
-        blinkTween.Append(sprite.DOColor(new Color(1,1,1,0.5f), blinkDuration)).Append(sprite.DOColor(ogColor, blinkDuration)).SetLoops(Int32.MaxValue);
+        blinkTween.Append(_renderer.DOColor(new Color(1,1,1,0.5f), blinkDuration)).Append(_renderer.DOColor(originalColor, blinkDuration)).SetLoops(Int32.MaxValue);
     }
 
     private void Awake() {
-        sprite = GetComponent<SpriteRenderer>();
-        ogColor = sprite.color;
+        _renderer = GetComponentInChildren<SpriteRenderer>();
+        originalColor = _renderer.color;
+        
+        spriteController = GetComponentInChildren<TargetSprites>();
+    }
+
+    private void Start()
+    {
+        spriteController.SetSprite(BodyType);
     }
 
     public void startGlowing(){
