@@ -47,7 +47,7 @@ public class TargetBehaviour : MonoBehaviour
             
             StopGlowing();
 
-            //_drawerController.ActivatePair(null, null);
+            _drawerController.ActivatePair(null, null);
         }
     }
 

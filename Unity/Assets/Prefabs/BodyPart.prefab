@@ -48,7 +48,7 @@ MonoBehaviour:
   shrinkPercent: 0.8
   floatPower: 0.35
   floatSpeed: 0.8
-  returnParameters: {fileID: 0}
+  returnParameters: {fileID: 11400000, guid: cb925a45af66753498673e2a90ae59e7, type: 2}
   bodyBodyPartType: 0
   bodyBodyPartState: 0
   _isGrabbed: 0
