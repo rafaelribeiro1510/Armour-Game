@@ -48,6 +48,7 @@ MonoBehaviour:
   shrinkPercent: 0.8
   floatPower: 0.35
   floatSpeed: 0.8
+  blinkColor: {r: 0.49554363, g: 0.879, b: 0.83180535, a: 1}
   returnParameters: {fileID: 11400000, guid: cb925a45af66753498673e2a90ae59e7, type: 2}
   bodyBodyPartType: 0
   bodyBodyPartState: 0

@@ -42,7 +42,7 @@ public class TargetBehaviour : MonoBehaviour
             Transform _t = _partHoveringOver.transform;
             _t.DOMove(transform.position, returnParameters.returnDuration/2)
                 .SetEase(returnParameters.returnEase)
-                .OnComplete(() => { _partHoveringOver.StartFloating();}); // Ease to target
+                .OnComplete(() => { _partHoveringOver.StartGlowing();}); // Ease to target
             _t.parent = null;
             
             StopGlowing();

@@ -2,7 +2,8 @@
     "name": "Body",
     "references": [
         "GUID:a22d0bfd2f86f89489fe485e932fb479",
-        "GUID:e74d259c577d0c743be8361924bbb585"
+        "GUID:e74d259c577d0c743be8361924bbb585",
+        "GUID:f5668de8dcc970e4aaa010997c195ebd"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

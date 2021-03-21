@@ -12,14 +12,16 @@ public class BodyPartBehaviour : MonoBehaviour
     [Header("While In Place parameters")] 
     [SerializeField] float floatPower;
     [SerializeField] float floatSpeed;
-    Sequence floatTween;
+    [SerializeField] Color blinkColor;
+    Sequence glowTween;
     
     [SerializeField] ReturnParameters returnParameters;
 
     BodyPartSprites spriteController;
     public BodyPartType bodyBodyPartType;
     public BodyPartState bodyBodyPartState;
-    float startingScale;
+    float _startingScale;
+    Color _startingColor;
     
     [HideInInspector] public bool _isGrabbed;
     [HideInInspector] public bool _onTopOfTarget = false;
@@ -28,11 +30,14 @@ public class BodyPartBehaviour : MonoBehaviour
     Camera _camera;
     [SerializeField] Collider2D _collider;
     Transform _parentTransform;
+    SpriteRenderer _renderer;
 
     void Awake() {
         _camera = Camera.main;
         _parentTransform = transform.parent;
-        startingScale = transform.localScale.x;
+        _startingScale = transform.localScale.x;
+        _renderer = GetComponent<SpriteRenderer>();
+        _startingColor = _renderer.color;
         
         spriteController = GetComponentInChildren<BodyPartSprites>();
     }
@@ -54,7 +59,7 @@ public class BodyPartBehaviour : MonoBehaviour
             if (touch.phase == TouchPhase.Began){
                 if (_collider == Physics2D.OverlapPoint(touchPos)){
                     _isGrabbed = true;
-                    transform.DOScale(shrinkPercent * startingScale, 0.1f);
+                    transform.DOScale(shrinkPercent * _startingScale, 0.1f);
                 }
             }
 
@@ -64,7 +69,7 @@ public class BodyPartBehaviour : MonoBehaviour
 
             else if (touch.phase == TouchPhase.Ended){
                 _isGrabbed = false;
-                transform.DOScale(startingScale, 0.1f);
+                transform.DOScale(_startingScale, 0.1f);
 
                 if (transform.position != _parentTransform.position){
                     if (!_onTopOfTarget)  
@@ -81,12 +86,9 @@ public class BodyPartBehaviour : MonoBehaviour
         spriteController.SetSprite(bodyPartType, bodyPartState);
     }
 
-    public void StartFloating()
+    public void StartGlowing()
     {
-        floatTween = DOTween.Sequence();
-        floatTween
-            .Append(transform.DOBlendableMoveBy(new Vector3(0,floatPower,0), floatSpeed))
-            .Append(transform.DOBlendableMoveBy(new Vector3(0,-floatPower,0), floatSpeed))
-            .SetLoops(Int32.MaxValue).SetEase(Ease.OutCubic);
+        glowTween = DOTween.Sequence();
+        glowTween.Append(_renderer.DOColor(blinkColor, floatSpeed)).Append(_renderer.DOColor(_startingColor, floatSpeed)).SetLoops(Int32.MaxValue);
     }
 }
