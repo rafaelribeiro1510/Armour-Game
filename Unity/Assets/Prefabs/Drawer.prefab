@@ -222,7 +222,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pair: {fileID: 0}
-  controller: {fileID: 0}
   _transform: {fileID: 0}
   moveRange: 2.9
   dragScale: 0.25
