@@ -19,7 +19,7 @@ jobs:
         
     # Activate License
     - name: Unity - Activate
-    uses: game-ci/unity-activate@v1.3
+      uses: game-ci/unity-activate@v1.3
         
     # Return License
     - name: Return license
