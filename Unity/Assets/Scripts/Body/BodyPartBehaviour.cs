@@ -8,6 +8,7 @@ public class BodyPartBehaviour : MonoBehaviour
 {
     [Header("While Being Grabbed parameters")]
     [SerializeField] float shrinkPercent;
+    [SerializeField] float growUpThreshold;
 
     [Header("While In Place parameters")] 
     [SerializeField] float floatPower;
@@ -18,10 +19,12 @@ public class BodyPartBehaviour : MonoBehaviour
     [SerializeField] ReturnParameters returnParameters;
 
     BodyPartSprites spriteController;
-    public BodyPartType bodyBodyPartType;
-    public BodyPartState bodyBodyPartState;
+    public BodyPartType BodyPartType;
+    public BodyPartState BodyPartState;
     float _startingScale;
     Color _startingColor;
+    [SerializeField] float _scaleInsideDrawer;
+    bool _insideDrawer = true;
     
     [HideInInspector] public bool _isGrabbed;
     [HideInInspector] public bool _onTopOfTarget = false;
@@ -39,13 +42,17 @@ public class BodyPartBehaviour : MonoBehaviour
         _renderer = GetComponent<SpriteRenderer>();
         _startingColor = _renderer.color;
         
+        
         spriteController = GetComponentInChildren<BodyPartSprites>();
     }
 
     private void Start()
     {
-        spriteController.SetSprite(bodyBodyPartType, bodyBodyPartState);
-        _collider = GetComponentInChildren<Collider2D>();
+        spriteController.SetSprite(BodyPartType, BodyPartState);
+        _collider = spriteController.UpdateCollider();
+        
+        _scaleInsideDrawer = BodyPartType == BodyPartType.Head ? 0.5f : (BodyPartType == BodyPartType.LegL || BodyPartType == BodyPartType.LegR ? 0.3f : 0.35f);
+        transform.DOScale(_scaleInsideDrawer, 0.00001f);
     }
 
     void Update()
@@ -77,12 +84,23 @@ public class BodyPartBehaviour : MonoBehaviour
                 }
             }
         }
+        
+        if (_insideDrawer && Vector3.Distance(transform.position, _parentTransform.position) > growUpThreshold)
+        {
+            _insideDrawer = false;
+            transform.DOScale(_startingScale, 0.1f);
+        }
+        else if (Vector3.Distance(transform.position, _parentTransform.position) <= growUpThreshold)
+        {
+            _insideDrawer = true;
+            transform.DOScale(_scaleInsideDrawer, 0.1f);
+        }
     }
 
     public void SetState(BodyPartType bodyPartType, BodyPartState bodyPartState)
     {
-        bodyBodyPartType = bodyPartType;
-        bodyBodyPartState = bodyPartState;
+        BodyPartType = bodyPartType;
+        BodyPartState = bodyPartState;
         spriteController.SetSprite(bodyPartType, bodyPartState);
     }
 

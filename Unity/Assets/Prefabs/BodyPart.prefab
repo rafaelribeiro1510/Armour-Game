@@ -46,12 +46,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shrinkPercent: 0.8
+  growUpThreshold: 2
   floatPower: 0.35
   floatSpeed: 0.8
   blinkColor: {r: 0.49554363, g: 0.879, b: 0.83180535, a: 1}
   returnParameters: {fileID: 11400000, guid: cb925a45af66753498673e2a90ae59e7, type: 2}
-  bodyBodyPartType: 0
-  bodyBodyPartState: 0
+  BodyPartType: 0
+  BodyPartState: 0
   _isGrabbed: 0
   _onTopOfTarget: 0
   _finished: 0

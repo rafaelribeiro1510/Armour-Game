@@ -30,13 +30,16 @@ public class BodyPartSprites : MonoBehaviour
         if (!_sprites.ContainsKey(bodyPartType)) return;
         
         _renderer.sprite = _sprites[bodyPartType][bodyPartState == BodyPartState.Outline ? 0 : 1];
+    }
 
-        BoxCollider2D col;
-        if (GetComponent<BoxCollider2D>() == null)
-        {
-            col = gameObject.AddComponent<BoxCollider2D>();
-            col.size = new Vector3( col.size.x + colliderScaleFactor, col.size.y + colliderScaleFactor, 1f);
-        }
+    public BoxCollider2D UpdateCollider()
+    {
+        BoxCollider2D col = GetComponent<BoxCollider2D>();
+        if (col != null) Destroy(col);
+
+        col = gameObject.AddComponent<BoxCollider2D>();
+        col.size = new Vector3(col.size.x + colliderScaleFactor, col.size.y + colliderScaleFactor, 1f);
         
+        return col;
     }
 }
