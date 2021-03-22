@@ -79,7 +79,7 @@ public class BodyPartBehaviour : MonoBehaviour
                 transform.DOScale(_startingScale, 0.1f);
 
                 if (transform.position != _parentTransform.position){
-                    if (!_onTopOfTarget)  
+                    if (!_onTopOfTarget && !_finished)  
                         transform.DOMove(_parentTransform.position, returnParameters.returnDuration).SetEase(returnParameters.returnEase); // Ease to starting position
                 }
             }

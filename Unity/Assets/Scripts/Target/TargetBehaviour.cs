@@ -38,8 +38,10 @@ public class TargetBehaviour : MonoBehaviour
     {
         if (_partHoveringOver && !_partHoveringOver._isGrabbed && !_partHoveringOver._finished) {
             _partHoveringOver._finished = true;
-            
+
             Transform _t = _partHoveringOver.transform;
+            DOTween.Kill(_t);
+            
             _t.DOMove(transform.position, returnParameters.returnDuration/2)
                 .SetEase(returnParameters.returnEase)
                 .OnComplete(() => { _partHoveringOver.StartGlowing();}); // Ease to target
