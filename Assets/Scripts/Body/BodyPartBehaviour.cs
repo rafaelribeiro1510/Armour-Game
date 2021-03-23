@@ -51,7 +51,7 @@ public class BodyPartBehaviour : MonoBehaviour
         spriteController.SetSprite(BodyPartType, BodyPartState);
         _collider = spriteController.UpdateCollider();
         
-        _scaleInsideDrawer = BodyPartType == BodyPartType.Head ? 0.5f : (BodyPartType == BodyPartType.LegL || BodyPartType == BodyPartType.LegR ? 0.3f : 0.35f);
+        _scaleInsideDrawer = BodyPartType == BodyPartType.Head ? 0.8f : (BodyPartType == BodyPartType.LegL || BodyPartType == BodyPartType.LegR ? 0.3f : 0.35f);
         transform.DOScale(_scaleInsideDrawer, 0.00001f);
     }
 
@@ -74,7 +74,7 @@ public class BodyPartBehaviour : MonoBehaviour
                 transform.position = touchPos;
             }
 
-            else if (touch.phase == TouchPhase.Ended){
+            else if (touch.phase == TouchPhase.Ended && _isGrabbed){
                 _isGrabbed = false;
                 transform.DOScale(_startingScale, 0.1f);
 
