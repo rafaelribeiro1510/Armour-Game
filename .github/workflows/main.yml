@@ -20,7 +20,7 @@ jobs:
           lfs: true
       - uses: actions/cache@v2
         with:
-          path: Unity/Library
+          path: Library
           key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
       - uses: game-ci/unity-builder@v2
@@ -30,9 +30,6 @@ jobs:
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
-          projectPath: Unity
-          buildsPath: Builds
-          buildName: ${{ matrix.targetPlatform }}
       - uses: actions/upload-artifact@v2
         with:
           name: Build-${{ matrix.targetPlatform }}
