@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   buildForAllSupportedPlatforms:
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     
     name: Build for ${{ matrix.targetPlatform }}
     runs-on: ubuntu-latest
