@@ -1,13 +1,16 @@
-﻿public enum BodyPartType{
-    Head,
-    Torso,
-    ArmL,
-    ArmR,
-    LegL,
-    LegR
-}
+﻿namespace Body.BodyType
+{
+    public enum BodyPartType{
+        Head,
+        Torso,
+        ArmL,
+        ArmR,
+        LegL,
+        LegR
+    }
 
-public enum BodyPartState {
-    Outline,
-    Filling
+    public enum BodyPartState {
+        Outline,
+        Filling
+    }
 }

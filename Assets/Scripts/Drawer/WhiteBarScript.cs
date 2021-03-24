@@ -1,24 +1,26 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class WhiteBarScript : MonoBehaviour
+namespace Drawer
 {
-    private SingleDrawerBehaviour drawer;
-    private float maxScale;
-    private Transform _transform;
-    
-    void Awake()
+    public class WhiteBarScript : MonoBehaviour
     {
-        drawer = GetComponentInParent<SingleDrawerBehaviour>();
-        _transform = transform;
-        _transform.parent = GameObject.Find("WhiteBars").transform;
-        maxScale = _transform.localScale.x;
-    }
+        private SingleDrawerBehaviour _drawer;
+        private float _maxScale;
+        private Transform _transform;
 
-    void Update()
-    {
-        _transform.localScale = new Vector3(Mathf.Lerp(maxScale, 0, drawer._movementPercentage), _transform.localScale.y,  _transform.localScale.z);
+        private void Awake()
+        {
+            _drawer = GetComponentInParent<SingleDrawerBehaviour>();
+            _transform = transform;
+            _transform.parent = GameObject.Find("WhiteBars").transform;
+            _maxScale = _transform.localScale.x;
+        }
+
+        private void Update()
+        {
+            var localScale = _transform.localScale;
+            localScale = new Vector3(Mathf.Lerp(_maxScale, 0, _drawer.movementPercentage), localScale.y,  localScale.z);
+            _transform.localScale = localScale;
+        }
     }
 }

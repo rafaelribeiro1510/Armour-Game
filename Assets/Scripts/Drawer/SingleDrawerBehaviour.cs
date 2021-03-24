@@ -1,130 +1,142 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using DG.Tweening;
 using UnityEngine;
-using DG.Tweening;
 
-public class SingleDrawerBehaviour : MonoBehaviour
+namespace Drawer
 {
-    [HideInInspector] public SingleDrawerBehaviour pair;
-    GameController _controller;
-
-    private Camera _camera;
-    [HideInInspector] public Transform _transform;
-    private Vector3 _transformPosition;
-    
-    [Header("Drawer stuff")]
-    [SerializeField] float moveRange;
-    bool _placedHorizontally;
-    bool _placedOnTheLeft;
-    bool _placedOnTheBottom;
-    [SerializeField] float dragScale;
-    [SerializeField] float doubleTapCooldownTime;
-    private float doubleTapCooldown = 0;
-    
-    [HideInInspector] public float _movementPercentage = 0;
-    Vector3 _startingPosition;
-    Vector3 _finalPosition;
-    Vector3 _targetPosition;
-
-    [Header("While Being Grabbed parameters")]
-    [SerializeField] float shrinkPercent = 1.05f;
-    Vector2 _grabPos;
-    Collider2D _collider;
-    bool _isGrabbed;
-
-
-    private void Awake() {
-        _camera = Camera.main;
-        _collider = GetComponent<Collider2D>();
-        _transform = transform;
-        
-        _placedHorizontally = _transform.rotation.z == 0;
-        _placedOnTheLeft = _transform.position.x < 0;
-        _placedOnTheBottom = _transform.position.y < 0;
-
-        _startingPosition = _transform.position;
-        _finalPosition = _startingPosition + 
-        new Vector3(
-                    (_placedHorizontally?moveRange:0)*(_placedOnTheLeft?1:-1), 
-                    (_placedHorizontally?0:moveRange)*(_placedOnTheBottom?1:-1)
-                    );
-    }
-
-    private void Start()
+    public class SingleDrawerBehaviour : MonoBehaviour
     {
-        _controller = GameController.Instance;
-    }
+        [HideInInspector] public SingleDrawerBehaviour pair;
+        GameController _controller;
 
-    void Update()
-    {
-        TickCooldowns();
+        private Camera _camera;
+        [HideInInspector] public Transform _transform;
+        private Vector3 _transformPosition;
+    
+        [Header("Drawer stuff")]
+        [SerializeField] private float moveRange;
+
+        private bool _placedHorizontally;
+        private bool _placedOnTheLeft;
+        private bool _placedOnTheBottom;
+        [SerializeField] private float dragScale;
+        [SerializeField] private float doubleTapCooldownTime;
+        private float _doubleTapCooldown = 0;
+    
+        [HideInInspector] public float movementPercentage = 0;
+        Vector3 _startingPosition;
+        Vector3 _finalPosition;
+        Vector3 _targetPosition;
+
+        [Header("While Being Grabbed parameters")]
+        [SerializeField] private float shrinkPercent = 1.05f;
+
+        private Vector2 _grabPos;
+        private Collider2D _collider;
+        private bool _isGrabbed;
         
-        if (Input.touchCount > 0){
-            Touch touch = Input.GetTouch(0);
-            Vector2 touchPos = _camera.ScreenToWorldPoint(touch.position);
+        private void Awake() {
+            _camera = Camera.main;
+            _collider = GetComponent<Collider2D>();
+            _transform = transform;
+        
+            _placedHorizontally = _transform.rotation.z == 0;
+            _placedOnTheLeft = _transform.position.x < 0;
+            _placedOnTheBottom = _transform.position.y < 0;
 
-            if (touch.tapCount == 2 && doubleTapCooldown <= 0)
-            {
-                doubleTapCooldown = doubleTapCooldownTime;
-                Close();
-                return;
-            }
-            
-            if (touch.phase == TouchPhase.Began){
-                if (_collider == Physics2D.OverlapPoint(touchPos)){
-                    _isGrabbed = true;
-                    _transform.DOScale(shrinkPercent, 0.1f);
-                    pair._transform.DOScale(shrinkPercent, 0.1f);
-                    _grabPos = touchPos;
-                }
-            }
-
-            else if (touch.phase == TouchPhase.Moved && _isGrabbed){
-                Vector2 difference = touchPos - _grabPos; difference.Scale(new Vector2(dragScale,dragScale));
-                _targetPosition = _placedHorizontally 
-                ? new Vector3(_transform.position.x + difference.x, _transform.position.y) 
-                : new Vector3(_transform.position.x, _transform.position.y + difference.y);
-
-                _targetPosition = Utils.NormalizedWithBounds(_targetPosition, _startingPosition, _finalPosition);
-                _movementPercentage = Utils.Vector3InverseLerp(_startingPosition, _finalPosition, _targetPosition);
-                
-                // Make sure pairs move together 
-                if (pair) pair._movementPercentage = _movementPercentage;
-            }
-
-            else if (touch.phase == TouchPhase.Ended && _isGrabbed){
-                _isGrabbed = false;
-                _transform.DOScale(1, 0.1f);
-                pair._transform.DOScale(1, 0.1f);
-                
-                // So drawers don't stay stuck in awkward mid positions
-                if (_movementPercentage < 0.75f) {
-                    Close();
-                }
-                else if (_movementPercentage >= 0.75f) {
-                    Open();
-                    _controller.ActivatePair(this, pair);
-                }
-            }
+            _startingPosition = _transform.position;
+            _finalPosition = _startingPosition + 
+                             new Vector3(
+                                 (_placedHorizontally?moveRange:0)*(_placedOnTheLeft?1:-1), 
+                                 (_placedHorizontally?0:moveRange)*(_placedOnTheBottom?1:-1)
+                             );
         }
+
+        private void Start()
+        {
+            _controller = GameController.Instance;
+        }
+
+        private void Update()
+        {
+            TickCooldowns();
         
-        _transform.position = Vector3.Lerp(_startingPosition, _finalPosition, _movementPercentage);
-    }
+            if (Input.touchCount > 0){
+                var touch = Input.GetTouch(0);
+                Vector2 touchPos = _camera.ScreenToWorldPoint(touch.position);
 
-    private void TickCooldowns()
-    {
-        if (doubleTapCooldown > 0) doubleTapCooldown -= Time.deltaTime;
-    }
+                if (touch.tapCount == 2 && _doubleTapCooldown <= 0)
+                {
+                    _doubleTapCooldown = doubleTapCooldownTime;
+                    Close();
+                    return;
+                }
+            
+                switch (touch.phase)
+                {
+                    case TouchPhase.Began:
+                    {
+                        if (_collider == Physics2D.OverlapPoint(touchPos)){
+                            _isGrabbed = true;
+                            _transform.DOScale(shrinkPercent, 0.1f);
+                            pair._transform.DOScale(shrinkPercent, 0.1f);
+                            _grabPos = touchPos;
+                        }
 
-    private void Open()
-    {
-        DOTween.To(() => _movementPercentage, x => _movementPercentage = x, 1, 0.1f);
-        DOTween.To(() => pair._movementPercentage, x =>pair. _movementPercentage = x, 1, 0.1f);
-    }
+                        break;
+                    }
+                    
+                    case TouchPhase.Moved when _isGrabbed:
+                    {
+                        Vector2 difference = touchPos - _grabPos; difference.Scale(new Vector2(dragScale,dragScale));
+                        _targetPosition = _placedHorizontally 
+                            ? new Vector3(_transform.position.x + difference.x, _transform.position.y) 
+                            : new Vector3(_transform.position.x, _transform.position.y + difference.y);
 
-    public void Close() {
-        DOTween.To(() => _movementPercentage, x => _movementPercentage = x, 0, 0.25f);
-        DOTween.To(() => pair._movementPercentage, x => pair._movementPercentage = x, 0, 0.25f);
+                        _targetPosition = Utils.NormalizedWithBounds(_targetPosition, _startingPosition, _finalPosition);
+                        movementPercentage = Utils.Vector3InverseLerp(_startingPosition, _finalPosition, _targetPosition);
+                
+                        // Make sure pairs move together 
+                        if (pair) pair.movementPercentage = movementPercentage;
+                        break;
+                    }
+                    
+                    case TouchPhase.Ended when _isGrabbed:
+                    {
+                        _isGrabbed = false;
+                        _transform.DOScale(1, 0.1f);
+                        pair._transform.DOScale(1, 0.1f);
+                
+                        // So drawers don't stay stuck in awkward mid positions
+                        if (movementPercentage < 0.75f) {
+                            Close();
+                        }
+                        else if (movementPercentage >= 0.75f) {
+                            Open();
+                            _controller.ActivatePair(this, pair);
+                        }
+
+                        break;
+                    }
+                }
+            }
+        
+            _transform.position = Vector3.Lerp(_startingPosition, _finalPosition, movementPercentage);
+        }
+
+        private void TickCooldowns()
+        {
+            if (_doubleTapCooldown > 0) _doubleTapCooldown -= Time.deltaTime;
+        }
+
+        private void Open()
+        {
+            DOTween.To(() => movementPercentage, x => movementPercentage = x, 1, 0.1f);
+            DOTween.To(() => pair.movementPercentage, x =>pair. movementPercentage = x, 1, 0.1f);
+        }
+
+        public void Close() {
+            DOTween.To(() => movementPercentage, x => movementPercentage = x, 0, 0.25f);
+            DOTween.To(() => pair.movementPercentage, x => pair.movementPercentage = x, 0, 0.25f);
+        }
     }
 }

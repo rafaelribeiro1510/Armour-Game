@@ -1,35 +1,38 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using Body.BodyType;
 using UnityEngine;
 
-public class TargetSprites : MonoBehaviour
+namespace Target
 {
-    private SpriteRenderer _renderer;
+    public class TargetSprites : MonoBehaviour
+    {
+        private SpriteRenderer _renderer;
     
-    [Serializable] public struct MakeShiftDictionaryEntry
-    {
-        public BodyPartType key;
-        public Sprite sprite;
-    }
+        [Serializable] public struct MakeShiftDictionaryEntry
+        {
+            public BodyPartType key;
+            public Sprite sprite;
+        }
 
-    [SerializeField] private List<MakeShiftDictionaryEntry> spriteDictionary = new List<MakeShiftDictionaryEntry>();
-    Dictionary<BodyPartType, Sprite> _sprites = new Dictionary<BodyPartType, Sprite>();
-    
-    void Awake() 
-    {
-        _renderer = GetComponent<SpriteRenderer>();
-        foreach (var dictEntry in spriteDictionary) _sprites.Add(dictEntry.key, dictEntry.sprite);
-    }
+        [SerializeField] private List<MakeShiftDictionaryEntry> spriteDictionary = new List<MakeShiftDictionaryEntry>();
+        private readonly Dictionary<BodyPartType, Sprite> _sprites = new Dictionary<BodyPartType, Sprite>();
 
-    public void SetSprite(BodyPartType bodyPartType)
-    {
-        if (!_sprites.ContainsKey(bodyPartType)) return;
+        private void Awake() 
+        {
+            _renderer = GetComponent<SpriteRenderer>();
+            foreach (var dictEntry in spriteDictionary) _sprites.Add(dictEntry.key, dictEntry.sprite);
+        }
 
-        _renderer.sprite = _sprites[bodyPartType];
+        public void SetSprite(BodyPartType bodyPartType)
+        {
+            if (!_sprites.ContainsKey(bodyPartType)) return;
 
-        BoxCollider2D col = gameObject.AddComponent<BoxCollider2D>();
-        col.isTrigger = true;
-        tag = bodyPartType.ToString();
+            _renderer.sprite = _sprites[bodyPartType];
+
+            var col = gameObject.AddComponent<BoxCollider2D>();
+            col.isTrigger = true;
+            tag = bodyPartType.ToString();
+        }
     }
 }
