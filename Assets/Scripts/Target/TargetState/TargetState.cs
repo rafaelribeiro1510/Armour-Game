@@ -1,6 +1,9 @@
 ﻿
-public enum TargetState {
-    Empty,
-    HalfComplete,
-    Complete
+namespace Target.TargetState
+{
+    public enum TargetState {
+        Empty,
+        HalfComplete,
+        Complete
+    }
 }

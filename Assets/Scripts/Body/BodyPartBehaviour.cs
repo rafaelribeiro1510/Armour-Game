@@ -2,6 +2,7 @@
 using Body.BodyType;
 using DG.Tweening;
 using UnityEngine;
+using Utils;
 
 namespace Body
 {

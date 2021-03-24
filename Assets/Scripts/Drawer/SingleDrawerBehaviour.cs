@@ -92,8 +92,8 @@ namespace Drawer
                             ? new Vector3(_transform.position.x + difference.x, _transform.position.y) 
                             : new Vector3(_transform.position.x, _transform.position.y + difference.y);
 
-                        _targetPosition = Utils.NormalizedWithBounds(_targetPosition, _startingPosition, _finalPosition);
-                        movementPercentage = Utils.Vector3InverseLerp(_startingPosition, _finalPosition, _targetPosition);
+                        _targetPosition = Utils.Utils.NormalizedWithBounds(_targetPosition, _startingPosition, _finalPosition);
+                        movementPercentage = Utils.Utils.Vector3InverseLerp(_startingPosition, _finalPosition, _targetPosition);
                 
                         // Make sure pairs move together 
                         if (pair) pair.movementPercentage = movementPercentage;

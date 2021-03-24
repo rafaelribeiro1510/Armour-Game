@@ -8,20 +8,20 @@ namespace Target
     {
         public static TargetController Instance { get; private set; }
 
-        private Dictionary<BodyPartType, TargetState> _targetStateMachine;
+        private Dictionary<BodyPartType, TargetState.TargetState> _targetStateMachine;
     
         private void Awake()
         {
             SingletonInitialization();
 
-            _targetStateMachine = new Dictionary<BodyPartType, TargetState>
+            _targetStateMachine = new Dictionary<BodyPartType, TargetState.TargetState>
             {
-                {BodyPartType.Head, TargetState.Empty},
-                {BodyPartType.Torso, TargetState.Empty},
-                {BodyPartType.ArmL, TargetState.Empty},
-                {BodyPartType.ArmR, TargetState.Empty},
-                {BodyPartType.LegL, TargetState.Empty},
-                {BodyPartType.LegR, TargetState.Empty},
+                {BodyPartType.Head, TargetState.TargetState.Empty},
+                {BodyPartType.Torso, TargetState.TargetState.Empty},
+                {BodyPartType.ArmL, TargetState.TargetState.Empty},
+                {BodyPartType.ArmR, TargetState.TargetState.Empty},
+                {BodyPartType.LegL, TargetState.TargetState.Empty},
+                {BodyPartType.LegR, TargetState.TargetState.Empty},
             };
         }
 
@@ -37,11 +37,11 @@ namespace Target
 
         private void TryPlacing(TargetBehaviour target)
         {
-            if (_targetStateMachine.ContainsValue(TargetState.HalfComplete))
+            if (_targetStateMachine.ContainsValue(TargetState.TargetState.HalfComplete))
             {
             
             }
-            else if (_targetStateMachine[target.BodyType] == TargetState.Empty)
+            else if (_targetStateMachine[target.BodyType] == TargetState.TargetState.Empty)
             {
             
             }
