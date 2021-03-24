@@ -18,7 +18,9 @@ public class SingleDrawerBehaviour : MonoBehaviour
     bool _placedHorizontally;
     bool _placedOnTheLeft;
     bool _placedOnTheBottom;
-    [SerializeField] private float dragScale;
+    [SerializeField] float dragScale;
+    [SerializeField] float doubleTapCooldownTime;
+    private float doubleTapCooldown = 0;
     
     [HideInInspector] public float _movementPercentage = 0;
     Vector3 _startingPosition;
@@ -56,11 +58,19 @@ public class SingleDrawerBehaviour : MonoBehaviour
 
     void Update()
     {
+        TickCooldowns();
+        
         if (Input.touchCount > 0){
-
             Touch touch = Input.GetTouch(0);
             Vector2 touchPos = _camera.ScreenToWorldPoint(touch.position);
 
+            if (touch.tapCount == 2 && doubleTapCooldown <= 0)
+            {
+                doubleTapCooldown = doubleTapCooldownTime;
+                Close();
+                return;
+            }
+            
             if (touch.phase == TouchPhase.Began){
                 if (_collider == Physics2D.OverlapPoint(touchPos)){
                     _isGrabbed = true;
@@ -100,6 +110,11 @@ public class SingleDrawerBehaviour : MonoBehaviour
         }
         
         _transform.position = Vector3.Lerp(_startingPosition, _finalPosition, _movementPercentage);
+    }
+
+    private void TickCooldowns()
+    {
+        if (doubleTapCooldown > 0) doubleTapCooldown -= Time.deltaTime;
     }
 
     private void Open()
