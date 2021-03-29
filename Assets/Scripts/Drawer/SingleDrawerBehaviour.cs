@@ -6,7 +6,7 @@ namespace Drawer
     public class SingleDrawerBehaviour : MonoBehaviour
     {
         [HideInInspector] public SingleDrawerBehaviour pair;
-        GameController _controller;
+        DrawerController _controller;
 
         private Camera _camera;
         [HideInInspector] public Transform _transform;
@@ -53,7 +53,7 @@ namespace Drawer
 
         private void Start()
         {
-            _controller = GameController.Instance;
+            _controller = DrawerController.Instance;
         }
 
         private void Update()
@@ -95,6 +95,8 @@ namespace Drawer
                         _targetPosition = Utils.Utils.NormalizedWithBounds(_targetPosition, _startingPosition, _finalPosition);
                         movementPercentage = Utils.Utils.Vector3InverseLerp(_startingPosition, _finalPosition, _targetPosition);
                 
+                        if (movementPercentage >= 0.5f) _controller.ActivatePair(null, null);
+                        
                         // Make sure pairs move together 
                         if (pair) pair.movementPercentage = movementPercentage;
                         break;
@@ -134,7 +136,9 @@ namespace Drawer
             DOTween.To(() => pair.movementPercentage, x =>pair. movementPercentage = x, 1, 0.1f);
         }
 
-        public void Close() {
+        public void Close()
+        {
+            if (_isGrabbed || pair._isGrabbed) return;
             DOTween.To(() => movementPercentage, x => movementPercentage = x, 0, 0.25f);
             DOTween.To(() => pair.movementPercentage, x => pair.movementPercentage = x, 0, 0.25f);
         }

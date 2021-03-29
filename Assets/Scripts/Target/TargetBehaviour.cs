@@ -16,7 +16,7 @@ namespace Target
     
         public BodyPartType BodyType;
         private TargetSprites _spriteController;
-        private GameController _drawerController;
+        private DrawerController _drawerController;
         private SpriteRenderer _renderer;
         private Color _originalColor;
 
@@ -33,7 +33,7 @@ namespace Target
 
         private void Start()
         {
-            _drawerController = GameController.Instance;
+            _drawerController = DrawerController.Instance;
             _spriteController.SetSprite(BodyType);
         }
 
@@ -73,8 +73,9 @@ namespace Target
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (!other.CompareTag(tag)) return;
-            
-            if (_partHoveringOver == null) _partHoveringOver = other.GetComponent<BodyPartBehaviour>();
+
+            var temPartHoveringOver = other.GetComponent<BodyPartBehaviour>();
+            if (_partHoveringOver is null && !temPartHoveringOver.insideDrawer) _partHoveringOver = temPartHoveringOver;
             
             _partHoveringOver.onTopOfTarget = true;
             StartGlowing();
@@ -84,9 +85,9 @@ namespace Target
         {
             if (!other.CompareTag(tag)) return;
             
-            _partHoveringOver.onTopOfTarget = false;
-            if (_partHoveringOver)
+            if (!(_partHoveringOver is null))
             {
+                _partHoveringOver.onTopOfTarget = false;
                 StopGlowing();
                 _partHoveringOver = null;
             }

@@ -26,11 +26,11 @@ namespace Body
         private float _startingScale;
         private Color _startingColor;
         [SerializeField] private float scaleInsideDrawer;
-        private bool _insideDrawer = true;
     
         [HideInInspector] public bool isGrabbed;
         [HideInInspector] public bool onTopOfTarget = false;
         [HideInInspector] public bool finished = false;
+        [HideInInspector] public bool insideDrawer = true;
 
         private Camera _camera;
         [SerializeField] private Collider2D _collider;
@@ -53,7 +53,10 @@ namespace Body
             _spriteController.SetSprite(BodyPartType, BodyPartState);
             _collider = _spriteController.UpdateCollider();
         
-            scaleInsideDrawer = BodyPartType == BodyPartType.Head ? 0.8f : (BodyPartType == BodyPartType.LegL || BodyPartType == BodyPartType.LegR ? 0.3f : 0.35f);
+            scaleInsideDrawer = 
+                BodyPartType == BodyPartType.Head ? 
+                    0.8f : 
+                    (BodyPartType == BodyPartType.LegL || BodyPartType == BodyPartType.LegR ? 0.3f : 0.35f);
             transform.DOScale(scaleInsideDrawer, 0.00001f);
         }
 
@@ -96,14 +99,14 @@ namespace Body
                 }
             }
         
-            if (_insideDrawer && Vector3.Distance(transform.position, _parentTransform.position) > growUpThreshold)
+            if (insideDrawer && Vector3.Distance(transform.position, _parentTransform.position) > growUpThreshold)
             {
-                _insideDrawer = false;
+                insideDrawer = false;
                 transform.DOScale(_startingScale, 0.1f);
             }
             else if (Vector3.Distance(transform.position, _parentTransform.position) <= growUpThreshold)
             {
-                _insideDrawer = true;
+                insideDrawer = true;
                 transform.DOScale(scaleInsideDrawer, 0.1f);
             }
         }

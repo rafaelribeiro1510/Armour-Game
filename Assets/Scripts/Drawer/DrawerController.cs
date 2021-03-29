@@ -9,9 +9,9 @@ using Drawer;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
-public class GameController : MonoBehaviour
+public class DrawerController : MonoBehaviour
 {
-    public static GameController Instance { get; private set; }
+    public static DrawerController Instance { get; private set; }
 
     List<SingleDrawerBehaviour> Drawers = new List<SingleDrawerBehaviour>();
     List<SingleDrawerBehaviour> ActiveDrawers = new List<SingleDrawerBehaviour>(2);
