@@ -21,7 +21,7 @@ namespace Body
         [SerializeField] private ReturnParameters returnParameters;
 
         private BodyPartSprites _spriteController;
-        public BodyPartType BodyPartType;
+        public BodyPartType BodyType;
         public BodyPartState BodyPartState;
         private float _startingScale;
         private Color _startingColor;
@@ -50,13 +50,13 @@ namespace Body
 
         private void Start()
         {
-            _spriteController.SetSprite(BodyPartType, BodyPartState);
+            _spriteController.SetSprite(BodyType, BodyPartState);
             _collider = _spriteController.UpdateCollider();
         
             scaleInsideDrawer = 
-                BodyPartType == BodyPartType.Head ? 
+                BodyType == BodyPartType.Head ? 
                     0.8f : 
-                    (BodyPartType == BodyPartType.LegL || BodyPartType == BodyPartType.LegR ? 0.3f : 0.35f);
+                    (BodyType == BodyPartType.LegL || BodyType == BodyPartType.LegR ? 0.3f : 0.35f);
             transform.DOScale(scaleInsideDrawer, 0.00001f);
         }
 
@@ -90,8 +90,9 @@ namespace Body
                         transform.DOScale(_startingScale, 0.1f);
 
                         if (transform.position != _parentTransform.position){
-                            if (!onTopOfTarget && !finished)  
-                                transform.DOMove(_parentTransform.position, returnParameters.returnDuration).SetEase(returnParameters.returnEase); // Ease to starting position
+                            if (!onTopOfTarget && !finished) {
+                                ReturnToDrawer();
+                            }
                         }
 
                         break;
@@ -111,9 +112,27 @@ namespace Body
             }
         }
 
+        public void ReturnToDrawer()
+        {
+            StopGlowing();
+            transform.DOMove(_parentTransform.position, returnParameters.returnDuration)
+                .SetEase(returnParameters.returnEase); // Ease to starting position
+        }
+        
+        public void EaseIntoPlace(Vector3 targetPosition)
+        {
+            DOTween.Kill(transform);
+            transform.DOMove(targetPosition, returnParameters.returnDuration / 2)
+                .SetEase(returnParameters.returnEase)
+                .OnComplete(StartGlowing);
+            transform.parent = null;
+            
+            //_drawerController.ActivatePair(null, null);
+        }
+
         public void SetState(BodyPartType bodyPartType, BodyPartState bodyPartState)
         {
-            BodyPartType = bodyPartType;
+            BodyType = bodyPartType;
             BodyPartState = bodyPartState;
             _spriteController.SetSprite(bodyPartType, bodyPartState);
         }
@@ -122,6 +141,10 @@ namespace Body
         {
             _glowTween = DOTween.Sequence();
             _glowTween.Append(_renderer.DOColor(blinkColor, floatSpeed)).Append(_renderer.DOColor(_startingColor, floatSpeed)).SetLoops(Int32.MaxValue);
+        }
+        
+        public void StopGlowing(){
+            _glowTween.Kill(true);
         }
     }
 }

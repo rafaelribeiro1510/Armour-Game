@@ -68,6 +68,7 @@ public class DrawerController : MonoBehaviour
                 var randomDrawer = Drawers[0];
                 while(fullDrawers.Contains(randomDrawer)) randomDrawer = Drawers[Random.Range(0, Drawers.Count)];
                 fullDrawers.Add(randomDrawer);
+                randomDrawer.holdingType = bodyType;
                 
                 var newBodyPart = Instantiate(BodyPartPrefab, randomDrawer._transform) as GameObject;
                 if (newBodyPart is null) continue;

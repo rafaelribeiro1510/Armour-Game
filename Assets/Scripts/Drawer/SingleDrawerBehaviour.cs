@@ -1,12 +1,16 @@
-﻿using DG.Tweening;
+﻿using Body.BodyType;
+using DG.Tweening;
+using Target;
 using UnityEngine;
 
 namespace Drawer
 {
     public class SingleDrawerBehaviour : MonoBehaviour
     {
+        public BodyPartType holdingType;
         [HideInInspector] public SingleDrawerBehaviour pair;
-        DrawerController _controller;
+        private DrawerController _drawerController;
+        private TargetController _targetController;
 
         private Camera _camera;
         [HideInInspector] public Transform _transform;
@@ -53,7 +57,8 @@ namespace Drawer
 
         private void Start()
         {
-            _controller = DrawerController.Instance;
+            _drawerController = DrawerController.Instance;
+            _targetController = TargetController.Instance;
         }
 
         private void Update()
@@ -94,8 +99,12 @@ namespace Drawer
 
                         _targetPosition = Utils.Utils.NormalizedWithBounds(_targetPosition, _startingPosition, _finalPosition);
                         movementPercentage = Utils.Utils.Vector3InverseLerp(_startingPosition, _finalPosition, _targetPosition);
-                
-                        if (movementPercentage >= 0.5f) _controller.ActivatePair(null, null);
+
+                        if (movementPercentage >= 0.5f)
+                        {
+                            _drawerController.ActivatePair(this, pair);
+                            _targetController.TryOpeningDrawer(holdingType, pair.holdingType);
+                        }
                         
                         // Make sure pairs move together 
                         if (pair) pair.movementPercentage = movementPercentage;
@@ -114,7 +123,6 @@ namespace Drawer
                         }
                         else if (movementPercentage >= 0.75f) {
                             Open();
-                            _controller.ActivatePair(this, pair);
                         }
 
                         break;

@@ -9,6 +9,8 @@ namespace Target
 {
     public class TargetBehaviour : MonoBehaviour
     {
+        [SerializeField] private TargetController _controller;
+        
         [Header("Blinking parameters")]
         [SerializeField] private float blinkDuration;
         [SerializeField] private Color blinkColor;
@@ -16,13 +18,12 @@ namespace Target
     
         public BodyPartType BodyType;
         private TargetSprites _spriteController;
-        private DrawerController _drawerController;
         private SpriteRenderer _renderer;
         private Color _originalColor;
 
         [SerializeField] private ReturnParameters returnParameters;
     
-        BodyPartBehaviour _partHoveringOver = null;
+        public BodyPartBehaviour partHoveringOver = null;
 
         private void Awake() 
         {
@@ -33,26 +34,21 @@ namespace Target
 
         private void Start()
         {
-            _drawerController = DrawerController.Instance;
             _spriteController.SetSprite(BodyType);
+            _controller = TargetController.Instance;
         }
 
         private void Update()
         {
-            if (_partHoveringOver && !_partHoveringOver.isGrabbed && !_partHoveringOver.finished) {
-                _partHoveringOver.finished = true;
+            if (partHoveringOver && !partHoveringOver.isGrabbed && !partHoveringOver.finished)
+            {
+                partHoveringOver.finished = true;
 
-                Transform _t = _partHoveringOver.transform;
-                DOTween.Kill(_t);
-            
-                _t.DOMove(transform.position, returnParameters.returnDuration/2)
-                    .SetEase(returnParameters.returnEase)
-                    .OnComplete(() => { _partHoveringOver.StartGlowing();}); // Ease to target
-                _t.parent = null;
-            
+                if (_controller.TryPlacing(partHoveringOver)) 
+                    partHoveringOver.EaseIntoPlace(transform.position);
+                
                 StopGlowing();
-
-                _drawerController.ActivatePair(null, null);
+                
             }
         }
 
@@ -74,10 +70,10 @@ namespace Target
         {
             if (!other.CompareTag(tag)) return;
 
-            var temPartHoveringOver = other.GetComponent<BodyPartBehaviour>();
-            if (_partHoveringOver is null && !temPartHoveringOver.insideDrawer) _partHoveringOver = temPartHoveringOver;
+            var tempPartHoveringOver = other.GetComponent<BodyPartBehaviour>();
+            if (partHoveringOver is null && !tempPartHoveringOver.insideDrawer) partHoveringOver = tempPartHoveringOver;
             
-            _partHoveringOver.onTopOfTarget = true;
+            partHoveringOver.onTopOfTarget = true;
             StartGlowing();
         }
 
@@ -85,11 +81,11 @@ namespace Target
         {
             if (!other.CompareTag(tag)) return;
             
-            if (!(_partHoveringOver is null))
+            if (!(partHoveringOver is null))
             {
-                _partHoveringOver.onTopOfTarget = false;
+                partHoveringOver.onTopOfTarget = false;
                 StopGlowing();
-                _partHoveringOver = null;
+                partHoveringOver = null;
             }
         }
     }
