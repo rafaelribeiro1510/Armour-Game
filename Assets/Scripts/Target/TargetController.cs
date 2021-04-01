@@ -11,7 +11,7 @@ namespace Target
         public static TargetController Instance { get; private set; }
 
         private Dictionary<BodyPartType, TargetState.TargetState> _targetStateMachine;
-        private BodyPartBehaviour _halfCompletePart;
+        [SerializeField] private BodyPartBehaviour _halfCompletePart;
 
         private void Awake()
         {
@@ -47,6 +47,8 @@ namespace Target
                 if (bodyPart.BodyType == _halfCompletePart.BodyType)
                 {
                     _targetStateMachine[_halfCompletePart.BodyType] = TargetState.TargetState.Complete;
+                    _halfCompletePart.StopGlowing();
+                    _halfCompletePart = null;
                     // Particle FX [Completing]
                 }
                 else
@@ -59,6 +61,7 @@ namespace Target
             else
             {
                 _halfCompletePart = bodyPart;
+                _halfCompletePart.StartGlowing();
                 _targetStateMachine[_halfCompletePart.BodyType] = TargetState.TargetState.HalfComplete;
             }
             
@@ -82,7 +85,9 @@ namespace Target
         {
             // Error sound
             // Screen flash red / Camera shake
+            _targetStateMachine[_halfCompletePart.BodyType] = TargetState.TargetState.Empty;
             _halfCompletePart.ReturnToDrawer();
+            _halfCompletePart = null;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Body;
 using Body.BodyType;
 using DG.Tweening;
@@ -19,6 +20,7 @@ namespace Target
         public BodyPartType BodyType;
         private TargetSprites _spriteController;
         private SpriteRenderer _renderer;
+        private Collider2D _col;
         private Color _originalColor;
 
         [SerializeField] private ReturnParameters returnParameters;
@@ -29,6 +31,7 @@ namespace Target
         {
             _renderer = GetComponent<SpriteRenderer>();
             _spriteController = GetComponent<TargetSprites>();
+            _col = GetComponent<Collider2D>();
             _originalColor = _renderer.color;
         }
 
@@ -44,12 +47,24 @@ namespace Target
             {
                 partHoveringOver.finished = true;
 
-                if (_controller.TryPlacing(partHoveringOver)) 
+                if (_controller.TryPlacing(partHoveringOver))
                     partHoveringOver.EaseIntoPlace(transform.position);
-                
+
                 StopGlowing();
                 
             }
+        }
+
+        private void TemporarilyDeactivateCollider()
+        {
+            StartCoroutine(TemporarilyDeactivateCollider_CR());
+        }
+
+        private IEnumerator TemporarilyDeactivateCollider_CR()
+        {
+            _col.enabled = false;
+            yield return new WaitForSeconds(0.4f);
+            _col.enabled = true;
         }
 
         private void StartBlink() 
@@ -71,7 +86,9 @@ namespace Target
             if (!other.CompareTag(tag)) return;
 
             var tempPartHoveringOver = other.GetComponent<BodyPartBehaviour>();
-            if (partHoveringOver is null && !tempPartHoveringOver.insideDrawer) partHoveringOver = tempPartHoveringOver;
+            if (tempPartHoveringOver.insideDrawer) return;
+
+            if (partHoveringOver is null) partHoveringOver = tempPartHoveringOver;
             
             partHoveringOver.onTopOfTarget = true;
             StartGlowing();

@@ -62,6 +62,17 @@ namespace Body
 
         void Update()
         {
+            if (insideDrawer && Vector3.Distance(transform.position, _parentTransform.position) > growUpThreshold)
+            {
+                insideDrawer = false;
+                transform.DOScale(_startingScale, 0.1f);
+            }
+            else if (Vector3.Distance(transform.position, _parentTransform.position) <= growUpThreshold)
+            {
+                insideDrawer = true;
+                transform.DOScale(scaleInsideDrawer, 0.1f);
+            }
+            
             if (finished) return; 
             
             if (Input.touchCount > 0){
@@ -99,33 +110,28 @@ namespace Body
                     }
                 }
             }
-        
-            if (insideDrawer && Vector3.Distance(transform.position, _parentTransform.position) > growUpThreshold)
-            {
-                insideDrawer = false;
-                transform.DOScale(_startingScale, 0.1f);
-            }
-            else if (Vector3.Distance(transform.position, _parentTransform.position) <= growUpThreshold)
-            {
-                insideDrawer = true;
-                transform.DOScale(scaleInsideDrawer, 0.1f);
-            }
         }
 
         public void ReturnToDrawer()
         {
             StopGlowing();
+            isGrabbed = true;
             transform.DOMove(_parentTransform.position, returnParameters.returnDuration)
-                .SetEase(returnParameters.returnEase); // Ease to starting position
+                .SetEase(returnParameters.returnEase)
+                .OnComplete(() => {
+                    transform.SetParent(_parentTransform);
+                    isGrabbed = false;
+                });
+            
+            finished = false;
         }
-        
+
         public void EaseIntoPlace(Vector3 targetPosition)
         {
             DOTween.Kill(transform);
             transform.DOMove(targetPosition, returnParameters.returnDuration / 2)
                 .SetEase(returnParameters.returnEase)
-                .OnComplete(StartGlowing);
-            transform.parent = null;
+                .OnComplete(() => { transform.parent = null; });
             
             //_drawerController.ActivatePair(null, null);
         }
