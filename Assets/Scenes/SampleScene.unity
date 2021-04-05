@@ -1810,7 +1810,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   successColor: {r: 0.39684942, g: 0.9245283, b: 0.49323693, a: 0}
   mistakeColor: {r: 0.5943396, g: 0.058873262, b: 0.17748617, a: 0}
-  alpha: 0.83
+  alpha: 0.7
   duration: 0.5
 --- !u!114 &1812587299
 MonoBehaviour:

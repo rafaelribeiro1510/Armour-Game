@@ -132,6 +132,7 @@ namespace Body
             transform.DOMove(_parentTransform.position, returnParameters.returnDuration)
                 .SetEase(returnParameters.returnEase)
                 .OnComplete(() => {
+                    transform.DOMove(_parentTransform.position, 0.1f);
                     transform.SetParent(_parentTransform);
                     isGrabbed = false;
                 });
