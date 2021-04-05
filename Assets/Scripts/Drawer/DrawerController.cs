@@ -12,6 +12,15 @@ namespace Drawer
     public class DrawerController : MonoBehaviour
     {
         public static DrawerController Instance { get; private set; }
+        private void SingletonInitialization()
+        {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(this.gameObject);
+            } else {
+                Instance = this;
+            }
+        }
 
         List<SingleDrawerBehaviour> Drawers = new List<SingleDrawerBehaviour>();
         List<SingleDrawerBehaviour> ActiveDrawers = new List<SingleDrawerBehaviour>(2);
@@ -25,16 +34,6 @@ namespace Drawer
             SingletonInitialization();
         
             Drawers = GetComponentsInChildren<SingleDrawerBehaviour>().ToList();
-        }
-
-        private void SingletonInitialization()
-        {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(this.gameObject);
-            } else {
-                Instance = this;
-            }
         }
 
         private void Start() {

@@ -1,4 +1,5 @@
-﻿using Body.BodyType;
+﻿using System;
+using Body.BodyType;
 using UnityEngine;
 
 namespace Body
@@ -6,14 +7,6 @@ namespace Body
     public class BodyController : MonoBehaviour
     {
         public static BodyController Instance { get; private set; }
-
-        [SerializeField] private BodyPartBehaviour _halfCompletePart;
-
-        private void Awake()
-        {
-            SingletonInitialization();
-        }
-
         private void SingletonInitialization()
         {
             if (Instance != null && Instance != this)
@@ -22,6 +15,20 @@ namespace Body
             } else {
                 Instance = this;
             }
+        }
+
+        [SerializeField] private BodyPartBehaviour _halfCompletePart;
+
+        private UIGlow _glow;
+
+        private void Awake()
+        {
+            SingletonInitialization();
+        }
+
+        private void Start()
+        {
+            _glow = UIGlow.Instance;
         }
 
         public bool TryPlacing(BodyPartBehaviour bodyPart)
@@ -35,11 +42,13 @@ namespace Body
                     _halfCompletePart.StopGlowing();
                     _halfCompletePart = null;
                     // Particle FX [Completing]
+                    _glow.GlowSuccess();
                     return true;
                 }
                 else
                 {
                     ReturnHalfCompletePart();
+                    _glow.GlowMistake();
                     return false;
                 }
             }
@@ -65,7 +74,7 @@ namespace Body
         private void ReturnHalfCompletePart()
         {
             // Error sound
-            // Screen flash red / Camera shake
+            _glow.GlowMistake();
             _halfCompletePart.ReturnToDrawer();
             _halfCompletePart = null;
         }
