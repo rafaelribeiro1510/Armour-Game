@@ -1,31 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Body;
-using Body.BodyType;
+﻿using Body.BodyType;
 using UnityEngine;
 
-namespace Target
+namespace Body
 {
-    public class TargetController : MonoBehaviour
+    public class BodyController : MonoBehaviour
     {
-        public static TargetController Instance { get; private set; }
+        public static BodyController Instance { get; private set; }
 
-        private Dictionary<BodyPartType, TargetState.TargetState> _targetStateMachine;
         [SerializeField] private BodyPartBehaviour _halfCompletePart;
 
         private void Awake()
         {
             SingletonInitialization();
-
-            _targetStateMachine = new Dictionary<BodyPartType, TargetState.TargetState>
-            {
-                {BodyPartType.Head, TargetState.TargetState.Empty },
-                {BodyPartType.Torso, TargetState.TargetState.Empty},
-                {BodyPartType.ArmL, TargetState.TargetState.Empty },
-                {BodyPartType.ArmR, TargetState.TargetState.Empty },
-                {BodyPartType.LegL, TargetState.TargetState.Empty },
-                {BodyPartType.LegR, TargetState.TargetState.Empty },
-            };
         }
 
         private void SingletonInitialization()
@@ -46,7 +32,6 @@ namespace Target
             {
                 if (bodyPart.BodyType == _halfCompletePart.BodyType)
                 {
-                    _targetStateMachine[_halfCompletePart.BodyType] = TargetState.TargetState.Complete;
                     _halfCompletePart.StopGlowing();
                     _halfCompletePart = null;
                     // Particle FX [Completing]
@@ -54,7 +39,6 @@ namespace Target
                 else
                 {
                     ReturnHalfCompletePart();
-                    bodyPart.ReturnToDrawer();
                     return false;
                 }
             }
@@ -62,13 +46,11 @@ namespace Target
             {
                 _halfCompletePart = bodyPart;
                 _halfCompletePart.StartGlowing();
-                _targetStateMachine[_halfCompletePart.BodyType] = TargetState.TargetState.HalfComplete;
+                // Particle FX [Half Completing]
+                return true;
             }
-            
-            // Successfully places part
-            
-            // Particle FX [Half Completing]
-            return true;
+
+            return false;
         }
 
         public void TryOpeningDrawer(BodyPartType drawer1Type, BodyPartType drawer2Type)
@@ -77,15 +59,16 @@ namespace Target
             
             if (drawer1Type != _halfCompletePart.BodyType && drawer2Type != _halfCompletePart.BodyType)
             {
+                print("Wrong type ; returning");
                 ReturnHalfCompletePart();
             }
+            else print("Right type, not returning");
         }
         
         private void ReturnHalfCompletePart()
         {
             // Error sound
             // Screen flash red / Camera shake
-            _targetStateMachine[_halfCompletePart.BodyType] = TargetState.TargetState.Empty;
             _halfCompletePart.ReturnToDrawer();
             _halfCompletePart = null;
         }

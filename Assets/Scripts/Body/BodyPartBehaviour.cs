@@ -1,6 +1,7 @@
 ﻿using System;
 using Body.BodyType;
 using DG.Tweening;
+using Target;
 using UnityEngine;
 using Utils;
 
@@ -8,6 +9,8 @@ namespace Body
 {
     public class BodyPartBehaviour : MonoBehaviour
     {
+        private BodyController _bodyController;
+        
         [Header("While Being Grabbed parameters")]
         [SerializeField] private float shrinkPercent;
         [SerializeField] private float growUpThreshold;
@@ -28,7 +31,7 @@ namespace Body
         [SerializeField] private float scaleInsideDrawer;
     
         [HideInInspector] public bool isGrabbed;
-        [HideInInspector] public bool onTopOfTarget = false;
+        [HideInInspector] public TargetBehaviour onTopOfTarget;
         [HideInInspector] public bool finished = false;
         [HideInInspector] public bool insideDrawer = true;
 
@@ -43,16 +46,17 @@ namespace Body
             _startingScale = transform.localScale.x;
             _renderer = GetComponent<SpriteRenderer>();
             _startingColor = _renderer.color;
-        
-        
+            
             _spriteController = GetComponentInChildren<BodyPartSprites>();
         }
 
         private void Start()
         {
+            _bodyController = BodyController.Instance;
+            
             _spriteController.SetSprite(BodyType, BodyPartState);
             _collider = _spriteController.UpdateCollider();
-        
+            
             scaleInsideDrawer = 
                 BodyType == BodyPartType.Head ? 
                     0.8f : 
@@ -101,8 +105,18 @@ namespace Body
                         transform.DOScale(_startingScale, 0.1f);
 
                         if (transform.position != _parentTransform.position){
-                            if (!onTopOfTarget && !finished) {
-                                ReturnToDrawer();
+                            if (onTopOfTarget is null) {
+                                if (!finished) ReturnToDrawer();
+                            }
+                            else if (onTopOfTarget) {
+                                if (!finished)
+                                {
+                                    if (_bodyController.TryPlacing(this)) {
+                                        EaseIntoPlace(onTopOfTarget.transform.position);
+                                    }
+                                    else
+                                        ReturnToDrawer();
+                                }
                             }
                         }
 
@@ -133,6 +147,7 @@ namespace Body
                 .SetEase(returnParameters.returnEase)
                 .OnComplete(() => { transform.parent = null; });
             
+            finished = false;
             //_drawerController.ActivatePair(null, null);
         }
 
@@ -151,6 +166,26 @@ namespace Body
         
         public void StopGlowing(){
             _glowTween.Kill(true);
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (!other.CompareTag(tag)) return;
+            if (insideDrawer) return;
+            
+            onTopOfTarget = other.GetComponent<TargetBehaviour>();
+            if (onTopOfTarget is null) return;
+            onTopOfTarget.StartGlowing();
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (!other.CompareTag(tag)) return;
+            if (insideDrawer) return;
+            
+            if (onTopOfTarget is null) return;
+            onTopOfTarget.StopGlowing();
+            onTopOfTarget = null;
         }
     }
 }

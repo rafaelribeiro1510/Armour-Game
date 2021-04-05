@@ -1,4 +1,5 @@
-﻿using Body.BodyType;
+﻿using Body;
+using Body.BodyType;
 using DG.Tweening;
 using Target;
 using UnityEngine;
@@ -10,7 +11,7 @@ namespace Drawer
         public BodyPartType holdingType;
         [HideInInspector] public SingleDrawerBehaviour pair;
         private DrawerController _drawerController;
-        private TargetController _targetController;
+        private BodyController _bodyController;
 
         private Camera _camera;
         [HideInInspector] public Transform _transform;
@@ -58,7 +59,7 @@ namespace Drawer
         private void Start()
         {
             _drawerController = DrawerController.Instance;
-            _targetController = TargetController.Instance;
+            _bodyController = BodyController.Instance;
         }
 
         private void Update()
@@ -103,7 +104,7 @@ namespace Drawer
                         if (movementPercentage >= 0.5f)
                         {
                             _drawerController.ActivatePair(this, pair);
-                            _targetController.TryOpeningDrawer(holdingType, pair.holdingType);
+                            _bodyController.TryOpeningDrawer(holdingType, pair.holdingType);
                         }
                         
                         // Make sure pairs move together 
