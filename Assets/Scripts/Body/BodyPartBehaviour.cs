@@ -111,9 +111,8 @@ namespace Body
                             else if (onTopOfTarget) {
                                 if (!finished)
                                 {
-                                    if (_bodyController.TryPlacing(this)) {
+                                    if (_bodyController.TryPlacing(this)) 
                                         EaseIntoPlace(onTopOfTarget.transform.position);
-                                    }
                                     else
                                         ReturnToDrawer();
                                 }

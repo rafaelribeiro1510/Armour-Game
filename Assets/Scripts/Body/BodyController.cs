@@ -35,6 +35,7 @@ namespace Body
                     _halfCompletePart.StopGlowing();
                     _halfCompletePart = null;
                     // Particle FX [Completing]
+                    return true;
                 }
                 else
                 {
@@ -49,8 +50,6 @@ namespace Body
                 // Particle FX [Half Completing]
                 return true;
             }
-
-            return false;
         }
 
         public void TryOpeningDrawer(BodyPartType drawer1Type, BodyPartType drawer2Type)
@@ -59,10 +58,8 @@ namespace Body
             
             if (drawer1Type != _halfCompletePart.BodyType && drawer2Type != _halfCompletePart.BodyType)
             {
-                print("Wrong type ; returning");
                 ReturnHalfCompletePart();
             }
-            else print("Right type, not returning");
         }
         
         private void ReturnHalfCompletePart()
