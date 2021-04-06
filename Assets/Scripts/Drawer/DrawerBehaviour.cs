@@ -1,7 +1,5 @@
 ﻿using Body;
-using Body.BodyType;
 using DG.Tweening;
-using Target;
 using UnityEngine;
 
 namespace Drawer
@@ -71,7 +69,6 @@ namespace Drawer
         {
             _holdingPart = bodyPartBehaviour;
             _holdingPartTransform = _holdingPart.transform;
-
         }
 
         private void Update()

@@ -148,7 +148,7 @@ namespace Body
                 .SetEase(returnParameters.returnEase)
                 .OnComplete(() => { transform.parent = null; });
             
-            inPlace = false;
+            inPlace = true;
             //_drawerController.ActivatePair(null, null);
         }
 
