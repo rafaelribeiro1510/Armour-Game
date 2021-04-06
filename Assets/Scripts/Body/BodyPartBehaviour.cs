@@ -31,6 +31,7 @@ namespace Body
         [SerializeField] private float scaleInsideDrawer;
     
         [HideInInspector] public bool isGrabbed;
+        [HideInInspector] public bool isBeingMoved;
         [HideInInspector] public TargetBehaviour onTopOfTarget;
         [HideInInspector] public bool inPlace = false;
         [HideInInspector] public bool insideDrawer = true;
@@ -77,7 +78,7 @@ namespace Body
                 transform.DOScale(scaleInsideDrawer, 0.1f);
             }
             
-            if (inPlace) return; 
+            if (inPlace || isBeingMoved) return; 
             
             if (Input.touchCount > 0){
                 var touch = Input.GetTouch(0);
@@ -129,13 +130,13 @@ namespace Body
         {
             if (!(onTopOfTarget is null)) onTopOfTarget.StopGlowing();
             StopGlowing();
-            isGrabbed = true;
+            isBeingMoved = true;
             transform.DOMove(_parentTransform.position, returnParameters.returnDuration)
                 .SetEase(returnParameters.returnEase)
                 .OnComplete(() => {
                     transform.DOMove(_parentTransform.position, 0.1f);
                     transform.SetParent(_parentTransform);
-                    isGrabbed = false;
+                    isBeingMoved = false;
                 });
             
             inPlace = false;
