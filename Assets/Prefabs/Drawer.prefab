@@ -224,9 +224,11 @@ MonoBehaviour:
   pair: {fileID: 0}
   _transform: {fileID: 0}
   moveRange: 2.9
+  autoCloseDistance: 3
   dragScale: 0.25
   doubleTapCooldownTime: 0.3
-  _movementPercentage: 0
+  autoClosingCooldownTime: 0.3
+  movementPercentage: 0
   shrinkPercent: 1.05
 --- !u!61 &1718417063370648804
 BoxCollider2D:

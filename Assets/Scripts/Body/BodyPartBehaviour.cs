@@ -32,11 +32,11 @@ namespace Body
     
         [HideInInspector] public bool isGrabbed;
         [HideInInspector] public TargetBehaviour onTopOfTarget;
-        [HideInInspector] public bool finished = false;
+        [HideInInspector] public bool inPlace = false;
         [HideInInspector] public bool insideDrawer = true;
 
         private Camera _camera;
-        [SerializeField] private Collider2D _collider;
+        private Collider2D _collider;
         private Transform _parentTransform;
         private SpriteRenderer _renderer;
 
@@ -77,7 +77,7 @@ namespace Body
                 transform.DOScale(scaleInsideDrawer, 0.1f);
             }
             
-            if (finished) return; 
+            if (inPlace) return; 
             
             if (Input.touchCount > 0){
                 var touch = Input.GetTouch(0);
@@ -106,10 +106,10 @@ namespace Body
 
                         if (transform.position != _parentTransform.position){
                             if (onTopOfTarget is null) {
-                                if (!finished) ReturnToDrawer();
+                                if (!inPlace) ReturnToDrawer();
                             }
                             else if (onTopOfTarget) {
-                                if (!finished)
+                                if (!inPlace)
                                 {
                                     if (_bodyController.TryPlacing(this)) 
                                         EaseIntoPlace(onTopOfTarget.transform.position);
@@ -127,6 +127,7 @@ namespace Body
 
         public void ReturnToDrawer()
         {
+            if (!(onTopOfTarget is null)) onTopOfTarget.StopGlowing();
             StopGlowing();
             isGrabbed = true;
             transform.DOMove(_parentTransform.position, returnParameters.returnDuration)
@@ -137,7 +138,7 @@ namespace Body
                     isGrabbed = false;
                 });
             
-            finished = false;
+            inPlace = false;
         }
 
         public void EaseIntoPlace(Vector3 targetPosition)
@@ -147,7 +148,7 @@ namespace Body
                 .SetEase(returnParameters.returnEase)
                 .OnComplete(() => { transform.parent = null; });
             
-            finished = false;
+            inPlace = false;
             //_drawerController.ActivatePair(null, null);
         }
 

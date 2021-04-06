@@ -4,13 +4,13 @@ namespace Drawer
 {
     public class WhiteBarScript : MonoBehaviour
     {
-        private SingleDrawerBehaviour _drawer;
+        private DrawerBehaviour _drawer;
         private float _maxScale;
         private Transform _transform;
 
         private void Awake()
         {
-            _drawer = GetComponentInParent<SingleDrawerBehaviour>();
+            _drawer = GetComponentInParent<DrawerBehaviour>();
             _transform = transform;
             _transform.parent = GameObject.Find("WhiteBars").transform;
             _maxScale = _transform.localScale.x;

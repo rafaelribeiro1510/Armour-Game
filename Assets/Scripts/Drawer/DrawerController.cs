@@ -22,8 +22,8 @@ namespace Drawer
             }
         }
 
-        List<SingleDrawerBehaviour> Drawers = new List<SingleDrawerBehaviour>();
-        List<SingleDrawerBehaviour> ActiveDrawers = new List<SingleDrawerBehaviour>(2);
+        List<DrawerBehaviour> Drawers = new List<DrawerBehaviour>();
+        List<DrawerBehaviour> ActiveDrawers = new List<DrawerBehaviour>(2);
     
         private GameObject TargetController;
 
@@ -33,7 +33,7 @@ namespace Drawer
         {
             SingletonInitialization();
         
-            Drawers = GetComponentsInChildren<SingleDrawerBehaviour>().ToList();
+            Drawers = GetComponentsInChildren<DrawerBehaviour>().ToList();
         }
 
         private void Start() {
@@ -57,7 +57,7 @@ namespace Drawer
 
         private void GenerateBodyParts()
         {
-            var fullDrawers = new List<SingleDrawerBehaviour>();
+            var fullDrawers = new List<DrawerBehaviour>();
 
             foreach (BodyPartState bodyState in Enum.GetValues(typeof(BodyPartState)))
             {
@@ -65,8 +65,6 @@ namespace Drawer
                 {
                     var randomDrawer = Drawers[0];
                     while(fullDrawers.Contains(randomDrawer)) randomDrawer = Drawers[Random.Range(0, Drawers.Count)];
-                    fullDrawers.Add(randomDrawer);
-                    randomDrawer.holdingType = bodyType;
                 
                     var newBodyPart = Instantiate(BodyPartPrefab, randomDrawer._transform) as GameObject;
                     if (newBodyPart is null) continue;
@@ -76,11 +74,14 @@ namespace Drawer
                     newBodyPart.tag = bodyType.ToString();
                     newBodyPart.transform.rotation = Quaternion.identity;
                     newBodyPartBehaviour.SetState(bodyType, bodyState);
+                    fullDrawers.Add(randomDrawer);
+                    
+                    randomDrawer.setHoldingPart(newBodyPartBehaviour);
                 }   
             }
         }
 
-        public void ActivatePair(SingleDrawerBehaviour drawer1, SingleDrawerBehaviour drawer2) {
+        public void ActivatePair(DrawerBehaviour drawer1, DrawerBehaviour drawer2) {
             if (ActiveDrawers.Contains(drawer1) || ActiveDrawers.Contains(drawer2)) return;
         
             if (ActiveDrawers.Count != 0)
@@ -88,7 +89,7 @@ namespace Drawer
                     oldDrawer.Close();
                 }
         
-            if ((object)drawer1 != null && (object)drawer2 != null) ActiveDrawers = new List<SingleDrawerBehaviour>(){drawer1, drawer2}; 
+            if ((object)drawer1 != null && (object)drawer2 != null) ActiveDrawers = new List<DrawerBehaviour>(){drawer1, drawer2}; 
         }
     }
 }

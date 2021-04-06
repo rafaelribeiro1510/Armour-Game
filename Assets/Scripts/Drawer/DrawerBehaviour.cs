@@ -6,10 +6,11 @@ using UnityEngine;
 
 namespace Drawer
 {
-    public class SingleDrawerBehaviour : MonoBehaviour
+    public class DrawerBehaviour : MonoBehaviour
     {
-        public BodyPartType holdingType;
-        [HideInInspector] public SingleDrawerBehaviour pair;
+        private BodyPartBehaviour _holdingPart;
+        private Transform _holdingPartTransform;
+        [HideInInspector] public DrawerBehaviour pair;
         private DrawerController _drawerController;
         private BodyController _bodyController;
 
@@ -20,14 +21,18 @@ namespace Drawer
         [Header("Drawer stuff")]
         [SerializeField] private float moveRange;
 
+        [SerializeField] private float autoCloseDistance;
+
         private bool _placedHorizontally;
         private bool _placedOnTheLeft;
         private bool _placedOnTheBottom;
         [SerializeField] private float dragScale;
         [SerializeField] private float doubleTapCooldownTime;
-        private float _doubleTapCooldown = 0;
+        [SerializeField] private float autoClosingCooldownTime;
+        private float _doubleTapCooldown;
+        private float _autoClosingCooldown;
     
-        [HideInInspector] public float movementPercentage = 0;
+        [HideInInspector] public float movementPercentage;
         Vector3 _startingPosition;
         Vector3 _finalPosition;
         Vector3 _targetPosition;
@@ -62,15 +67,29 @@ namespace Drawer
             _bodyController = BodyController.Instance;
         }
 
+        public void setHoldingPart(BodyPartBehaviour bodyPartBehaviour)
+        {
+            _holdingPart = bodyPartBehaviour;
+            _holdingPartTransform = _holdingPart.transform;
+
+        }
+
         private void Update()
         {
             TickCooldowns();
+
+            if (_autoClosingCooldown <= 0 && !_holdingPart.inPlace && Vector3.Distance(_transform.position, _holdingPartTransform.position) > autoCloseDistance)
+            {
+                _autoClosingCooldown = autoClosingCooldownTime;
+                Close();
+                return;
+            }
         
             if (Input.touchCount > 0){
                 var touch = Input.GetTouch(0);
                 Vector2 touchPos = _camera.ScreenToWorldPoint(touch.position);
 
-                if (touch.tapCount == 2 && _doubleTapCooldown <= 0)
+                if (_doubleTapCooldown <= 0 && touch.tapCount == 2)
                 {
                     _doubleTapCooldown = doubleTapCooldownTime;
                     Close();
@@ -104,7 +123,7 @@ namespace Drawer
                         if (movementPercentage >= 0.5f)
                         {
                             _drawerController.ActivatePair(this, pair);
-                            _bodyController.TryOpeningDrawer(holdingType, pair.holdingType);
+                            _bodyController.TryOpeningDrawer(_holdingPart.BodyType, pair._holdingPart.BodyType);
                         }
                         
                         // Make sure pairs move together 
@@ -137,6 +156,8 @@ namespace Drawer
         private void TickCooldowns()
         {
             if (_doubleTapCooldown > 0) _doubleTapCooldown -= Time.deltaTime;
+            if (_autoClosingCooldown > 0) _autoClosingCooldown -= Time.deltaTime;
+            
         }
 
         private void Open()
