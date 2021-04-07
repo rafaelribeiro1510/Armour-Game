@@ -51,7 +51,6 @@ public class PartCompleteScript : MonoBehaviour
         Result = new BodyInputInfo(
             "PLACEHOLDER", "PLACEHOLDER",
             _sizeSelectors[0].output, _sizeSelectors[1].output);
-        Close();
     }
 
     [ContextMenu("Open Size and Emotion Menu")]
@@ -68,6 +67,12 @@ public class PartCompleteScript : MonoBehaviour
         if (!_open) return;
         _open = false;
         _transform.DOMove(_closedPosition, openTime).SetEase(Ease.OutSine);
+    }
+
+    public void ResetValues()
+    {
+        Result = null;
         _sizeSelectors.ForEach(x => x.ResetValues());
+        Close();
     }
 }

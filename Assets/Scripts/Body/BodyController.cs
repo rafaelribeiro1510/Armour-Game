@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Body.BodyType;
 using UnityEngine;
@@ -21,7 +22,7 @@ namespace Body
         private BodyPartBehaviour _halfCompletePart;
 
         private PartCompleteScript _partCompleteMenu;
-        private Dictionary<BodyPartType, BodyInputInfo> _bodyInputInfo;
+        private Dictionary<BodyPartType, BodyInputInfo> _bodyInputInfo = new Dictionary<BodyPartType, BodyInputInfo>();
 
         private UIGlow _glow;
 
@@ -45,10 +46,10 @@ namespace Body
                 if (bodyPart.BodyType == _halfCompletePart.BodyType)
                 {
                     _halfCompletePart.StopGlowing();
-                    _halfCompletePart = null;
                     // Particle FX [Completing]
                     _glow.GlowSuccess();
                     _partCompleteMenu.Open();
+                    GrabResultFromPartCompleteMenu();
                     return true;
                 }
                 else
@@ -82,6 +83,20 @@ namespace Body
             // Error sound
             _glow.GlowMistake();
             _halfCompletePart.ReturnToDrawer();
+            _halfCompletePart = null;
+        }
+
+        private void GrabResultFromPartCompleteMenu()
+        {
+            StartCoroutine(GrabResultFromPartCompleteMenu_CO());
+        }
+        
+        private IEnumerator GrabResultFromPartCompleteMenu_CO()
+        {
+            while (_partCompleteMenu.Result is null) yield return null;
+            
+            _bodyInputInfo.Add(_halfCompletePart.BodyType, _partCompleteMenu.Result); 
+            _partCompleteMenu.ResetValues();
             _halfCompletePart = null;
         }
     }
