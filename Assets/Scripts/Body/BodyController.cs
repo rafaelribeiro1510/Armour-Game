@@ -17,7 +17,7 @@ namespace Body
             }
         }
 
-        [SerializeField] private BodyPartBehaviour _halfCompletePart;
+        private BodyPartBehaviour _halfCompletePart;
 
         private UIGlow _glow;
 
