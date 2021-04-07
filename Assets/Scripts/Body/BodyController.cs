@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Body.BodyType;
 using UnityEngine;
 
@@ -19,6 +20,9 @@ namespace Body
 
         private BodyPartBehaviour _halfCompletePart;
 
+        private PartCompleteScript _partCompleteMenu;
+        private Dictionary<BodyPartType, BodyInputInfo> _bodyInputInfo;
+
         private UIGlow _glow;
 
         private void Awake()
@@ -29,6 +33,7 @@ namespace Body
         private void Start()
         {
             _glow = UIGlow.Instance;
+            _partCompleteMenu = PartCompleteScript.Instance;
         }
 
         public bool TryPlacing(BodyPartBehaviour bodyPart)
@@ -43,6 +48,7 @@ namespace Body
                     _halfCompletePart = null;
                     // Particle FX [Completing]
                     _glow.GlowSuccess();
+                    _partCompleteMenu.Open();
                     return true;
                 }
                 else
