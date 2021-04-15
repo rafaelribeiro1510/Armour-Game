@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Body;
 using Body.BodyType;
+using PartCompleteMenu;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
@@ -26,6 +27,8 @@ namespace Drawer
         List<DrawerBehaviour> ActiveDrawers = new List<DrawerBehaviour>(2);
     
         private GameObject TargetController;
+        private PartCompleteScript PartCompleteMenu;
+        private bool _alreadySlidDrawersOffScreen = false;
 
         [SerializeField] Object BodyPartPrefab;
     
@@ -39,6 +42,24 @@ namespace Drawer
         private void Start() {
             GenerateRandomPairsOfDrawers();
             GenerateBodyParts();
+            
+            PartCompleteMenu = PartCompleteScript.Instance;
+        }
+
+        private void Update()
+        {
+            if (!_alreadySlidDrawersOffScreen && PartCompleteMenu.open)
+            {
+                print("Sliding drawers off screen");
+                Drawers.ForEach(drawer => drawer.SlideOffScreen());
+                _alreadySlidDrawersOffScreen = true;
+            }
+            else if (_alreadySlidDrawersOffScreen && !PartCompleteMenu.open)
+            {
+                print("Sliding drawers back");
+                Drawers.ForEach(drawer => drawer.SlideOnScreen());
+                _alreadySlidDrawersOffScreen = false;
+            }
         }
 
         private void GenerateRandomPairsOfDrawers(){
@@ -65,7 +86,7 @@ namespace Drawer
                 {
                     var randomDrawer = Drawers[0];
                     while(fullDrawers.Contains(randomDrawer)) randomDrawer = Drawers[Random.Range(0, Drawers.Count)];
-                
+
                     var newBodyPart = Instantiate(BodyPartPrefab, randomDrawer._transform) as GameObject;
                     if (newBodyPart is null) continue;
                     var newBodyPartBehaviour = newBodyPart.GetComponent<BodyPartBehaviour>();
@@ -73,6 +94,7 @@ namespace Drawer
                     newBodyPart.name = bodyType.ToString();
                     newBodyPart.tag = bodyType.ToString();
                     newBodyPart.transform.rotation = Quaternion.identity;
+                    newBodyPart.transform.position = new Vector3(newBodyPart.transform.position.x, newBodyPart.transform.position.y, -1);
                     newBodyPartBehaviour.SetState(bodyType, bodyState);
                     fullDrawers.Add(randomDrawer);
                     

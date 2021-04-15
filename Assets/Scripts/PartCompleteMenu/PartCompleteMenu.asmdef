@@ -1,11 +1,8 @@
 {
-    "name": "Drawer",
+    "name": "PartCompleteMenu",
     "references": [
-        "GUID:e74d259c577d0c743be8361924bbb585",
-        "GUID:9878bc8a0bb58ba409e9871f6dad4d65",
-        "GUID:a22d0bfd2f86f89489fe485e932fb479",
-        "GUID:7c38c05ca4326974283d9992fd067a12",
-        "GUID:bb04054daf9845d49953029b72b072fd"
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:a22d0bfd2f86f89489fe485e932fb479"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

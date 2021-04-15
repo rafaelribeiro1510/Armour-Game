@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-namespace UI
+namespace PartCompleteMenu
 {
     public class SizeSelector : MonoBehaviour
     {
@@ -23,8 +23,8 @@ namespace UI
         [SerializeField] private Color greyedOutColor;
         [SerializeField] private Color selectedColor;
 
-        public bool ready;
-        public int output;
+        [HideInInspector] public bool ready;
+        [HideInInspector] public int output;
     
         private void Awake()
         {

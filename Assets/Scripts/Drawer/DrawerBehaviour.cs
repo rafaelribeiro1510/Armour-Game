@@ -11,6 +11,7 @@ namespace Drawer
         [HideInInspector] public DrawerBehaviour pair;
         private DrawerController _drawerController;
         private BodyController _bodyController;
+        private Transform _whiteBarTransform;
 
         private Camera _camera;
         [HideInInspector] public Transform _transform;
@@ -21,12 +22,14 @@ namespace Drawer
 
         [SerializeField] private float autoCloseDistance;
 
+        private bool _active = true;
         private bool _placedHorizontally;
         private bool _placedOnTheLeft;
         private bool _placedOnTheBottom;
         [SerializeField] private float dragScale;
         [SerializeField] private float doubleTapCooldownTime;
         [SerializeField] private float autoClosingCooldownTime;
+        [SerializeField] private float slideOffScreenAmount;
         private float _doubleTapCooldown;
         private float _autoClosingCooldown;
     
@@ -46,6 +49,7 @@ namespace Drawer
             _camera = Camera.main;
             _collider = GetComponent<Collider2D>();
             _transform = transform;
+            _whiteBarTransform = _transform.GetChild(1);
         
             _placedHorizontally = _transform.rotation.z == 0;
             _placedOnTheLeft = _transform.position.x < 0;
@@ -73,6 +77,7 @@ namespace Drawer
 
         private void Update()
         {
+            if (!_active) return;
             TickCooldowns();
 
             if (_autoClosingCooldown <= 0 && !_holdingPart.inPlace && Vector3.Distance(_transform.position, _holdingPartTransform.position) > autoCloseDistance)
@@ -168,6 +173,23 @@ namespace Drawer
             if (_isGrabbed || pair._isGrabbed) return;
             DOTween.To(() => movementPercentage, x => movementPercentage = x, 0, 0.25f);
             DOTween.To(() => pair.movementPercentage, x => pair.movementPercentage = x, 0, 0.25f);
+        }
+
+        public void SlideOffScreen()
+        {
+            var amountX = (_placedHorizontally ? 1 : 0) * (_placedOnTheLeft ? -1 : 1) * slideOffScreenAmount;
+            var amountY = (_placedHorizontally ? 0 : 1) * (_placedOnTheBottom ? -1 : 1) * slideOffScreenAmount;
+            _active = false;
+            _whiteBarTransform.DOBlendableMoveBy(new Vector3(amountX, amountY, _transform.position.z), 0.2f);
+            _transform.DOBlendableMoveBy(new Vector3(amountX, amountY, _transform.position.z), 0.2f);
+        }
+        
+        public void SlideOnScreen()
+        {
+            var amountX = (_placedHorizontally ? 1 : 0) * (_placedOnTheLeft ? -1 : 1) * -slideOffScreenAmount;
+            var amountY = (_placedHorizontally ? 0 : 1) * (_placedOnTheBottom ? -1 : 1) * -slideOffScreenAmount;
+            _whiteBarTransform.DOBlendableMoveBy(new Vector3(amountX, amountY, _transform.position.z), 0.2f);
+            _transform.DOBlendableMoveBy(new Vector3(amountX, amountY, _transform.position.z), 0.2f).OnComplete(() => _active = true);
         }
     }
 }

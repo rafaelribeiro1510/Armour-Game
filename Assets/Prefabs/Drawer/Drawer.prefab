@@ -228,6 +228,7 @@ MonoBehaviour:
   dragScale: 0.25
   doubleTapCooldownTime: 0.3
   autoClosingCooldownTime: 0.3
+  slideOffScreenAmount: 5
   movementPercentage: 0
   shrinkPercent: 1.05
 --- !u!61 &1718417063370648804

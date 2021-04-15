@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Drawer
 {
@@ -12,8 +13,12 @@ namespace Drawer
         {
             _drawer = GetComponentInParent<DrawerBehaviour>();
             _transform = transform;
-            _transform.parent = GameObject.Find("WhiteBars").transform;
             _maxScale = _transform.localScale.x;
+        }
+
+        private void Start()
+        {
+            _transform.parent = GameObject.Find("WhiteBars").transform;
         }
 
         private void Update()
