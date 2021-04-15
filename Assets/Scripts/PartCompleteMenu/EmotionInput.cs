@@ -23,6 +23,8 @@ namespace PartCompleteMenu
         
         [HideInInspector] public bool ready;
         [HideInInspector] public string output;
+
+        private string placeholderText = "Escreve aqui";
     
         private void Awake()
         {
@@ -43,6 +45,9 @@ namespace PartCompleteMenu
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            
+            _textBox.color = Color.grey; // Placeholder color
+            _textBox.text = placeholderText; // Placeholder text
         }
 
         private void Update()
@@ -53,19 +58,16 @@ namespace PartCompleteMenu
                 Vector2 touchPos = _camera.ScreenToWorldPoint(touch.position);
                 if (_col == Physics2D.OverlapPoint(touchPos))
                 {
-                    _keyboard = TouchScreenKeyboard.Open(_textBox.text, TouchScreenKeyboardType.Default, true, false, false, false, "Escreve a emoção aqui");
+                    _keyboard = TouchScreenKeyboard.Open(_textBox.text != placeholderText ? _textBox.text : "", TouchScreenKeyboardType.Default);
                 }
             }
 
-            if (_keyboard == null || _keyboard.text != "")
-            {
-                _textBox.color = Color.grey; // Placeholder color
-                _textBox.text = "Escreve aqui"; // Placeholder text
-            }
-            else
+            if (_keyboard.status == TouchScreenKeyboard.Status.Done || _keyboard.status == TouchScreenKeyboard.Status.LostFocus)
             {
                 _textBox.color = Color.black;
                 _textBox.text = _keyboard.text;
+                ready = true;
+                output = _textBox.text;
             }
         }
     }

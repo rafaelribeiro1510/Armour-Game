@@ -26,7 +26,7 @@ namespace PartCompleteMenu
         private Vector3 _closedPosition;
 
         private List<SizeSelector> _sizeSelectors;
-        // private List<EmotionSelector> _emotionSelectors;
+        private List<EmotionInput> _emotionInputs;
 
         public BodyInputInfo Result;
 
@@ -37,19 +37,19 @@ namespace PartCompleteMenu
             _closedPosition = _transform.position;
 
             _sizeSelectors = new List<SizeSelector>(GetComponentsInChildren<SizeSelector>());
-            //_emotionSelectors = new List<SizeSelector>(GetComponentsInChildren<EmotionSelector>());
+            _emotionInputs = new List<EmotionInput>(GetComponentsInChildren<EmotionInput>());
         }
 
         private void Update()
         {
             if (!open) return;
         
-            // If some selector isn't ready yet TODO emotionSelectors
-            if (_sizeSelectors.Any(sizeSelector => !sizeSelector.ready)) { return; }
+            // If some selector isn't ready yet
+            if (_sizeSelectors.Any(sizeSelector => !sizeSelector.ready) || _emotionInputs.Any(emotionInput => !emotionInput.ready)) { return; }
         
             Result = new BodyInputInfo(
-                "PLACEHOLDER", "PLACEHOLDER",
-                _sizeSelectors[0].output, _sizeSelectors[1].output);
+                _sizeSelectors[0].output, _sizeSelectors[1].output,
+                _emotionInputs[0].output, _emotionInputs[1].output);
         }
 
         [ContextMenu("Open Size and Emotion Menu")]

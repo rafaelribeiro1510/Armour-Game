@@ -7,12 +7,12 @@
         public int SizePhysical;
         public int SizeDisease;
 
-        public BodyInputInfo(string emotionPhysical, string emotionDisease, int sizePhysical, int sizeDisease)
+        public BodyInputInfo(int sizePhysical, int sizeDisease, string emotionPhysical, string emotionDisease)
         {
-            EmotionPhysical = emotionPhysical;
-            EmotionDisease = emotionDisease;
             SizePhysical = sizePhysical;
             SizeDisease = sizeDisease;
+            EmotionPhysical = emotionPhysical;
+            EmotionDisease = emotionDisease;
         }
     }
 }
