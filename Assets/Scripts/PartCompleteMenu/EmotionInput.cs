@@ -62,7 +62,8 @@ namespace PartCompleteMenu
                 }
             }
 
-            if (_keyboard.status == TouchScreenKeyboard.Status.Done || _keyboard.status == TouchScreenKeyboard.Status.LostFocus)
+            if (_keyboard != null && (_keyboard.status == TouchScreenKeyboard.Status.Done ||
+                                      _keyboard.status == TouchScreenKeyboard.Status.LostFocus))
             {
                 _textBox.color = Color.black;
                 _textBox.text = _keyboard.text;
