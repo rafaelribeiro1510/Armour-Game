@@ -72,6 +72,7 @@ namespace PartCompleteMenu
         {
             Result = null;
             _sizeSelectors.ForEach(x => x.ResetValues());
+            _emotionInputs.ForEach(x => x.ResetValues());
             Close();
         }
     }

@@ -50,13 +50,11 @@ namespace Drawer
         {
             if (!_alreadySlidDrawersOffScreen && PartCompleteMenu.open)
             {
-                print("Sliding drawers off screen");
                 Drawers.ForEach(drawer => drawer.SlideOffScreen());
                 _alreadySlidDrawersOffScreen = true;
             }
             else if (_alreadySlidDrawersOffScreen && !PartCompleteMenu.open)
             {
-                print("Sliding drawers back");
                 Drawers.ForEach(drawer => drawer.SlideOnScreen());
                 _alreadySlidDrawersOffScreen = false;
             }

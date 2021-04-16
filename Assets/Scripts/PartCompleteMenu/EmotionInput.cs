@@ -45,9 +45,8 @@ namespace PartCompleteMenu
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
-            _textBox.color = Color.grey; // Placeholder color
-            _textBox.text = placeholderText; // Placeholder text
+
+            ResetValues();
         }
 
         private void Update()
@@ -70,6 +69,13 @@ namespace PartCompleteMenu
                 ready = true;
                 output = _textBox.text;
             }
+        }
+
+        public void ResetValues()
+        {
+            ready = false;
+            _textBox.text = placeholderText;
+            _textBox.color = Color.grey;
         }
     }
 }
