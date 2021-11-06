@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Body.BodyType;
+using Controllers;
 using PartCompleteMenu;
 using UnityEngine;
 
@@ -20,10 +21,12 @@ namespace Body
             }
         }
 
+        private GameSectionController _gameSectionController;
+
         private BodyPartBehaviour _halfCompletePart;
 
         private PartCompleteScript _partCompleteMenu;
-        private Dictionary<BodyPartType, BodyInputInfo> _bodyInputInfo = new Dictionary<BodyPartType, BodyInputInfo>();
+        [SerializeField] private FinishedBody finishedBody;
 
         private UIGlow _glow;
 
@@ -36,8 +39,15 @@ namespace Body
         {
             _glow = UIGlow.Instance;
             _partCompleteMenu = PartCompleteScript.Instance;
+            _gameSectionController = GameSectionController.Instance;
         }
 
+        private void Update()
+        {
+            if (finishedBody.IsFinished)
+                _gameSectionController.MoveToSecondSection();
+        }
+ 
         public bool TryPlacing(BodyPartBehaviour bodyPart)
         {
             if (bodyPart is null) return false;
@@ -96,7 +106,8 @@ namespace Body
         {
             while (_partCompleteMenu.Result is null) yield return null;
             
-            _bodyInputInfo.Add(_halfCompletePart.BodyType, _partCompleteMenu.Result); 
+            finishedBody.InsertBodyInputInfo(_halfCompletePart.BodyType, _partCompleteMenu.Result); 
+            
             _partCompleteMenu.ResetValues();
             _halfCompletePart = null;
         }
