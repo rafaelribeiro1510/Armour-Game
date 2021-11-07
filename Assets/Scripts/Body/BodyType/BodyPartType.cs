@@ -10,7 +10,7 @@
     }
 
     public enum BodyPartState {
-        Outline,
-        Filling
+        Disease,
+        Physical
     }
 }

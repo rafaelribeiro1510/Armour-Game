@@ -9,9 +9,9 @@ namespace Body
 {
     public class FinishedBodyPartBehaviour : MonoBehaviour
     {
-        private FinishedBodyPartSprites _spriteControllerPhysical;
-        private FinishedBodyPartSprites _spriteControllerDisease;
+        private FinishedBodyPartSprites _spriteController;
         public BodyPartType BodyType;
+        private BodyPartState _bodyPartState;
         private BodyInputInfo _bodyInputInfo;
 
         private bool _isTouched = false; 
@@ -23,18 +23,17 @@ namespace Body
         void Awake() {
             _camera = Camera.main;
             _renderer = GetComponent<SpriteRenderer>();
-            var spriteControllers = GetComponentsInChildren<FinishedBodyPartSprites>();
-            _spriteControllerPhysical = spriteControllers[0];
-            _spriteControllerDisease = spriteControllers[1];
+            _spriteController = GetComponentInChildren<FinishedBodyPartSprites>();
+
+            _bodyPartState = GetComponentInParent<FinishedBody>().bodyPartState;
         }
 
         public void SetBodyInputInfo(BodyInputInfo bodyInputInfo)
         {
             _bodyInputInfo = bodyInputInfo;
             
-            _spriteControllerPhysical.SetSprite(BodyType, bodyInputInfo.SizePhysical);
-            _spriteControllerDisease.SetSprite(BodyType, bodyInputInfo.SizeDisease);
-            _collider = _spriteControllerPhysical.UpdateCollider();
+            _spriteController.SetSprite(BodyType, _bodyPartState, bodyInputInfo.SizePhysical);
+            _collider = _spriteController.UpdateCollider();
         }
 
         void Update()

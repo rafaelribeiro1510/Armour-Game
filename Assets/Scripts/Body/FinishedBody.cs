@@ -13,6 +13,8 @@ namespace Body
         private readonly Dictionary<BodyPartType, BodyInputInfo> _bodyInputInfo = new Dictionary<BodyPartType, BodyInputInfo>();
         private readonly Dictionary<BodyPartType, FinishedBodyPartBehaviour> _bodyPartBehaviours = new Dictionary<BodyPartType, FinishedBodyPartBehaviour>();
 
+        public BodyPartState bodyPartState;
+
         void Awake()
         {
             var bodyPartBehaviours = GetComponentsInChildren<FinishedBodyPartBehaviour>();

@@ -26,7 +26,8 @@ namespace Body
         private BodyPartBehaviour _halfCompletePart;
 
         private PartCompleteScript _partCompleteMenu;
-        [SerializeField] private FinishedBody finishedBody;
+        [SerializeField] private FinishedBody finishedBodyPhysical;
+        [SerializeField] private FinishedBody finishedBodyDisease;
 
         private UIGlow _glow;
 
@@ -44,7 +45,7 @@ namespace Body
 
         private void Update()
         {
-            if (finishedBody.IsFinished)
+            if (finishedBodyPhysical.IsFinished)
                 _gameSectionController.MoveToSecondSection();
         }
  
@@ -60,7 +61,7 @@ namespace Body
                     // Particle FX [Completing]
                     _glow.GlowSuccess();
                     _partCompleteMenu.Open();
-                    GrabResultFromPartCompleteMenu();
+                    InsertBodyInputInfo();
                     return true;
                 }
                 else
@@ -97,16 +98,17 @@ namespace Body
             _halfCompletePart = null;
         }
 
-        private void GrabResultFromPartCompleteMenu()
+        private void InsertBodyInputInfo()
         {
-            StartCoroutine(GrabResultFromPartCompleteMenu_CO());
+            StartCoroutine(InsertBodyInputInfo_CO());
         }
         
-        private IEnumerator GrabResultFromPartCompleteMenu_CO()
+        private IEnumerator InsertBodyInputInfo_CO()
         {
             while (_partCompleteMenu.Result is null) yield return null;
             
-            finishedBody.InsertBodyInputInfo(_halfCompletePart.BodyType, _partCompleteMenu.Result); 
+            finishedBodyPhysical.InsertBodyInputInfo(_halfCompletePart.BodyType, _partCompleteMenu.Result); 
+            finishedBodyDisease.InsertBodyInputInfo(_halfCompletePart.BodyType, _partCompleteMenu.Result);
             
             _partCompleteMenu.ResetValues();
             _halfCompletePart = null;

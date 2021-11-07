@@ -30,7 +30,7 @@ namespace Body
         {
             if (!_sprites.ContainsKey(bodyPartType)) return;
         
-            _renderer.sprite = _sprites[bodyPartType][bodyPartState == BodyPartState.Outline ? 0 : 1];
+            _renderer.sprite = _sprites[bodyPartType][bodyPartState == BodyPartState.Disease ? 0 : 1];
         }
 
         public BoxCollider2D UpdateCollider()

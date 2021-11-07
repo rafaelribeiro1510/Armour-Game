@@ -11,14 +11,24 @@ namespace Body
 
         private SpriteRenderer _renderer;
     
+        [Serializable] public struct MakeShiftDictionaryKey
+        {
+            public MakeShiftDictionaryKey(BodyPartType bodyPartType, BodyPartState bodyPartState)
+            {
+                this.bodyPartType = bodyPartType;
+                this.bodyPartState = bodyPartState;
+            }
+            public BodyPartType bodyPartType;
+            public BodyPartState bodyPartState;
+        }
         [Serializable] public struct MakeShiftDictionaryEntry
         {
-            public BodyPartType key;
+            public MakeShiftDictionaryKey key;
             public List<Sprite> sprites;
         }
 
         [SerializeField] private List<MakeShiftDictionaryEntry> spriteDictionary = new List<MakeShiftDictionaryEntry>();
-        private readonly Dictionary<BodyPartType, List<Sprite>> _sprites = new Dictionary<BodyPartType, List<Sprite>>();
+        private readonly Dictionary<MakeShiftDictionaryKey, List<Sprite>> _sprites = new Dictionary<MakeShiftDictionaryKey, List<Sprite>>();
 
         private void Awake() 
         {
@@ -26,11 +36,12 @@ namespace Body
             foreach (var dictEntry in spriteDictionary) _sprites.Add(dictEntry.key, dictEntry.sprites);
         }
 
-        public void SetSprite(BodyPartType bodyPartType, int bodyPartSize)
+        public void SetSprite(BodyPartType bodyPartType, BodyPartState bodyPartState, int bodyPartSize)
         {
-            if (!_sprites.ContainsKey(bodyPartType)) return;
+            var key = new MakeShiftDictionaryKey(bodyPartType, bodyPartState);
+            if (!_sprites.ContainsKey(key)) return;
         
-            _renderer.sprite = _sprites[bodyPartType][bodyPartSize];
+            _renderer.sprite = _sprites[key][bodyPartSize];
         }
 
         public BoxCollider2D UpdateCollider()
