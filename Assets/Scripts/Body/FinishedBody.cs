@@ -38,13 +38,19 @@ namespace Body
             _bodyInputInfo.Add(bodyPartType, bodyInputInfo);
             _bodyPartBehaviours[bodyPartType].SetBodyInputInfo(bodyInputInfo);
         }
+        
+        private void FadeAlphaOfChildren(float alpha) {
+            SpriteRenderer[] children = GetComponentsInChildren<SpriteRenderer>();
+            foreach(SpriteRenderer child in children) {
+                child.DOFade(alpha, DisplacementDuration);
+            }
+        }
 
         private void Update()
         {
             // Handle OverlapBodiesButton changes (only run once when button is clicked)
             if (_localOverlapFlag == _overlapBodiesButton.isOverlapping) return;
-            
-            
+
             var displacementX = 0;
             if (bodyPartState == BodyPartState.Physical)
             {
@@ -55,8 +61,12 @@ namespace Body
                 displacementX = _overlapBodiesButton.isOverlapping ? -5 : 5;
             }
 
+            // Translate body
             transform.DOMoveX(displacementX, DisplacementDuration).SetRelative();
                 
+            // If this is the Disease body, also fade opacity
+            FadeAlphaOfChildren(_overlapBodiesButton.isOverlapping ? 0.5f : 1);
+            
             _localOverlapFlag = _overlapBodiesButton.isOverlapping;
         }
     }
