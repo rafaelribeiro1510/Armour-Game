@@ -32,7 +32,7 @@ namespace Body
         {
             _bodyInputInfo = bodyInputInfo;
             
-            _spriteController.SetSprite(BodyType, _bodyPartState, bodyInputInfo.SizePhysical);
+            _spriteController.SetSprite(BodyType, _bodyPartState, _bodyPartState == BodyPartState.Physical ? bodyInputInfo.SizePhysical : bodyInputInfo.SizeDisease);
             _collider = _spriteController.UpdateCollider();
         }
 
