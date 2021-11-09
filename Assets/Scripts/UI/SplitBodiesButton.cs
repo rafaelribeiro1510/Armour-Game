@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace UI
 {
-    public class OverlapBodiesButton : MonoBehaviour
+    public class SplitBodiesButton : MonoBehaviour
     {
-        public static OverlapBodiesButton Instance { get; private set; }
+        public static SplitBodiesButton Instance { get; private set; }
         private void SingletonInitialization()
         {
             if (Instance != null && Instance != this)

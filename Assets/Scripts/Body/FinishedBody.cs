@@ -14,8 +14,8 @@ namespace Body
         private readonly Dictionary<BodyPartType, BodyInputInfo> _bodyInputInfo = new Dictionary<BodyPartType, BodyInputInfo>();
         private readonly Dictionary<BodyPartType, FinishedBodyPartBehaviour> _bodyPartBehaviours = new Dictionary<BodyPartType, FinishedBodyPartBehaviour>();
 
-        private OverlapBodiesButton _overlapBodiesButton;
-        private bool _localOverlapFlag = false;
+        private SplitBodiesButton _splitBodiesButton;
+        private bool _localSplitFlag = false;
         private const float DisplacementDuration = 0.5f;
 
         public BodyPartState bodyPartState;
@@ -28,7 +28,7 @@ namespace Body
                 _bodyPartBehaviours.Add(bodyPartBehaviour.BodyType, bodyPartBehaviour);
             }
             
-            _overlapBodiesButton = OverlapBodiesButton.Instance;
+            _splitBodiesButton = SplitBodiesButton.Instance;
         }
 
         public bool IsFinished => _bodyInputInfo.Count == 1;
@@ -49,25 +49,25 @@ namespace Body
         private void Update()
         {
             // Handle OverlapBodiesButton changes (only run once when button is clicked)
-            if (_localOverlapFlag == _overlapBodiesButton.isOverlapping) return;
+            if (_localSplitFlag == _splitBodiesButton.isOverlapping) return;
 
             var displacementX = 0;
             if (bodyPartState == BodyPartState.Physical)
             {
-                displacementX = _overlapBodiesButton.isOverlapping ? 5 : -5;
+                displacementX = _splitBodiesButton.isOverlapping ? -5 : 5;
             }
             else if (bodyPartState == BodyPartState.Disease)
             {
-                displacementX = _overlapBodiesButton.isOverlapping ? -5 : 5;
+                displacementX = _splitBodiesButton.isOverlapping ? 5 : -5;
             }
 
             // Translate body
             transform.DOMoveX(displacementX, DisplacementDuration).SetRelative();
                 
             // If this is the Disease body, also fade opacity
-            FadeAlphaOfChildren(_overlapBodiesButton.isOverlapping ? 0.5f : 1);
+            FadeAlphaOfChildren(_splitBodiesButton.isOverlapping ? 1 : 0.5f);
             
-            _localOverlapFlag = _overlapBodiesButton.isOverlapping;
+            _localSplitFlag = _splitBodiesButton.isOverlapping;
         }
     }
 }
