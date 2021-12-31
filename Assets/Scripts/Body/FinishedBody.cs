@@ -74,16 +74,19 @@ namespace Body
 
         public void SaveState()
         {
+            // Make sure saves folder exists
+            string saveFolder = Application.persistentDataPath + "/saves";
+            Directory.CreateDirectory(saveFolder);
+
             var serialized = JsonConvert.SerializeObject(_bodyInputInfo);
-            print("Saved " + bodyPartState + serialized);
-            
-            string destination = Application.persistentDataPath + "saves/save_" /* + saveSlot + "_" */ + bodyPartState + ".dat";
+            string destination = saveFolder + "/save_" /* + saveSlot + "_" */ + bodyPartState + ".dat";
             File.WriteAllText(destination, serialized);
+            print("Saved " + bodyPartState + serialized);
         }
 
         public void LoadState()
         {
-            string destination = Application.persistentDataPath + "saves/save_" /* + saveSlot + "_" */ + bodyPartState + ".dat";
+            string destination = Application.persistentDataPath + "/saves/save_" /* + saveSlot + "_" */ + bodyPartState + ".dat";
             try
             {
                 var fileStream = File.OpenRead(destination);
