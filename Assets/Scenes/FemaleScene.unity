@@ -542,7 +542,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9c07010758ea2843bde7f1e0e006b9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  finishedBody: {fileID: 1638141207}
+  finishedBodies: {fileID: 1638141207}
 --- !u!1 &121332753
 GameObject:
   m_ObjectHideFlags: 0
@@ -3808,7 +3808,7 @@ GameObject:
   - component: {fileID: 1638141206}
   - component: {fileID: 1638141207}
   m_Layer: 0
-  m_Name: FinishedBody
+  m_Name: FinishedBodies
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

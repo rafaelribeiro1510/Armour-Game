@@ -27,7 +27,7 @@ namespace Body
         private BodyPartBehaviour _halfCompletePart;
 
         private PartCompleteScript _partCompleteMenu;
-        [SerializeField] private FinishedBodyController finishedBody;
+        [SerializeField] private FinishedBodiesController finishedBodies;
 
         private UIGlow _glow;
 
@@ -45,7 +45,7 @@ namespace Body
 
         private void Update()
         {
-            if (finishedBody.IsFinished)
+            if (finishedBodies.IsFinished)
                 _gameSectionController.MoveToSecondSection();
         }
  
@@ -110,7 +110,7 @@ namespace Body
         {
             while (bodyInputInfo is null && _partCompleteMenu.Result is null) yield return null;
             
-            finishedBody.InsertBodyInputInfo(_halfCompletePart.BodyType, bodyInputInfo ?? _partCompleteMenu.Result); 
+            finishedBodies.InsertBodyInputInfo(_halfCompletePart.BodyType, bodyInputInfo ?? _partCompleteMenu.Result); 
 
             _partCompleteMenu.ResetValues();
             _halfCompletePart = null;

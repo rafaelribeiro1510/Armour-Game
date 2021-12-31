@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Body
 {
-    public class FinishedBodyController : MonoBehaviour
+    public class FinishedBodiesController : MonoBehaviour
     {
         private FinishedBody _physicalController;
         private FinishedBody _diseaseController;
