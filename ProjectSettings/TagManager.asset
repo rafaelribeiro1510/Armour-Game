@@ -47,3 +47,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Body
+    uniqueID: 741909601
+    locked: 0
+  - name: Menu
+    uniqueID: 423554701
+    locked: 0

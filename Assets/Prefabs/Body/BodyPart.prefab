@@ -51,12 +51,14 @@ MonoBehaviour:
   floatSpeed: 0.8
   blinkColor: {r: 0.49554363, g: 0.879, b: 0.83180535, a: 1}
   returnParameters: {fileID: 11400000, guid: cb925a45af66753498673e2a90ae59e7, type: 2}
-  BodyPartType: 0
+  BodyType: 0
   BodyPartState: 0
-  _isGrabbed: 0
-  _onTopOfTarget: 0
-  _finished: 0
-  _collider: {fileID: 0}
+  scaleInsideDrawer: 0
+  isGrabbed: 0
+  isBeingMoved: 0
+  onTopOfTarget: {fileID: 0}
+  inPlace: 0
+  insideDrawer: 1
 --- !u!212 &8521977252883149261
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -93,8 +95,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 741909601
+  m_SortingLayer: 2
   m_SortingOrder: 1
   m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

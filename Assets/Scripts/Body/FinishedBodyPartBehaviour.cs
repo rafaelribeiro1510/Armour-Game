@@ -45,7 +45,6 @@ namespace Body
             yield return new WaitUntil( () => StatsScreenController._awakened);
             
             _statsController = StatsScreenController.Instance;
-            print(_statsController);
         }
 
         public void SetBodyInputInfo(BodyInputInfo bodyInputInfo)
