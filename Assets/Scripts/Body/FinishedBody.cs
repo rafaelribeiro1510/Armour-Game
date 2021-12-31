@@ -79,14 +79,14 @@ namespace Body
             Directory.CreateDirectory(saveFolder);
 
             var serialized = JsonConvert.SerializeObject(_bodyInputInfo);
-            string destination = saveFolder + "/save_" /* + saveSlot + "_" */ + bodyPartState + ".dat";
+            string destination = saveFolder + "/save_" /* + saveSlot + "_" */ + ".dat";
             File.WriteAllText(destination, serialized);
             print("Saved " + bodyPartState + serialized);
         }
 
-        public void LoadState()
+        public Dictionary<BodyPartType, BodyInputInfo> LoadState()
         {
-            string destination = Application.persistentDataPath + "/saves/save_" /* + saveSlot + "_" */ + bodyPartState + ".dat";
+            string destination = Application.persistentDataPath + "/saves/save_" /* + saveSlot + "_" */ + ".dat";
             try
             {
                 var fileStream = File.OpenRead(destination);
@@ -98,19 +98,19 @@ namespace Body
 
                 _bodyInputInfo.Clear();
                 var deserialized = JsonConvert.DeserializeObject<Dictionary<BodyPartType, BodyInputInfo>>(saveFile);
-                if (deserialized == null) return;
+                if (deserialized == null) return null;
                 print("Loaded " + bodyPartState + deserialized);
                 
                 _bodyInputInfo.Clear();
-                foreach (KeyValuePair<BodyPartType, BodyInputInfo> entry in  deserialized)
-                {
-                    InsertBodyInputInfo(entry.Key, entry.Value);
-                }
+
+                return deserialized;
             }
             catch (FileNotFoundException e)
             {
                 print(e);
             }
+
+            return null;
         }
     }
 }

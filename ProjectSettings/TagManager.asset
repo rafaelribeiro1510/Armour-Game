@@ -10,6 +10,7 @@ TagManager:
   - ArmR
   - LegL
   - LegR
+  - Bodypart
   layers:
   - Default
   - TransparentFX
