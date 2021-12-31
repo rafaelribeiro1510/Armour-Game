@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Body.BodyType;
 using DG.Tweening;
 using Target;
 using UI;
+using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine;
 using Utils;
 
@@ -68,6 +70,44 @@ namespace Body
             FadeAlphaOfChildren(_splitBodiesButton.isOverlapping ? 1 : 0.5f);
             
             _localSplitFlag = _splitBodiesButton.isOverlapping;
+        }
+
+        public void SaveState()
+        {
+            var serialized = JsonConvert.SerializeObject(_bodyInputInfo);
+            print("Saved " + bodyPartState + serialized);
+            
+            string destination = Application.persistentDataPath + "saves/save_" /* + saveSlot + "_" */ + bodyPartState + ".dat";
+            File.WriteAllText(destination, serialized);
+        }
+
+        public void LoadState()
+        {
+            string destination = Application.persistentDataPath + "saves/save_" /* + saveSlot + "_" */ + bodyPartState + ".dat";
+            try
+            {
+                var fileStream = File.OpenRead(destination);
+                string saveFile;
+                using (StreamReader reader = new StreamReader(fileStream))
+                {
+                    saveFile = reader.ReadToEnd();
+                }
+
+                _bodyInputInfo.Clear();
+                var deserialized = JsonConvert.DeserializeObject<Dictionary<BodyPartType, BodyInputInfo>>(saveFile);
+                if (deserialized == null) return;
+                print("Loaded " + bodyPartState + deserialized);
+                
+                _bodyInputInfo.Clear();
+                foreach (KeyValuePair<BodyPartType, BodyInputInfo> entry in  deserialized)
+                {
+                    InsertBodyInputInfo(entry.Key, entry.Value);
+                }
+            }
+            catch (FileNotFoundException e)
+            {
+                print(e);
+            }
         }
     }
 }
