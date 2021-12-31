@@ -6,6 +6,7 @@ namespace Stats
 {
     public class StatsScreenController : MonoBehaviour
     {
+        public static bool _awakened;
         public static StatsScreenController Instance { get; private set; }
         private void SingletonInitialization()
         {
@@ -15,6 +16,8 @@ namespace Stats
             } else {
                 Instance = this;
             }
+
+            _awakened = true;
         }
 
         private BodyPartType? _clickedBodyPart;

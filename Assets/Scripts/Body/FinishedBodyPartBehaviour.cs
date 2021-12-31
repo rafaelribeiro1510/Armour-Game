@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Body.BodyType;
 using DG.Tweening;
 using Stats;
@@ -21,7 +22,13 @@ namespace Body
         private Collider2D _collider;
         private SpriteRenderer _renderer;
 
-        void Awake() {
+        void Awake()
+        {
+            StartCoroutine(Startup());
+        }
+
+        private IEnumerator Startup()
+        {
             _camera = Camera.main;
             _collider = GetComponent<Collider2D>();
             _renderer = GetComponent<SpriteRenderer>();
@@ -35,7 +42,10 @@ namespace Body
 
             _bodyPartState = GetComponentInParent<FinishedBody>().bodyPartState;
 
+            yield return new WaitUntil( () => StatsScreenController._awakened);
+            
             _statsController = StatsScreenController.Instance;
+            print(_statsController);
         }
 
         public void SetBodyInputInfo(BodyInputInfo bodyInputInfo)

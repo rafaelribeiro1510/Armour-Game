@@ -31,7 +31,7 @@ namespace Body
             _splitBodiesButton = SplitBodiesButton.Instance;
         }
 
-        public bool IsFinished => _bodyInputInfo.Count == 1;
+        public bool IsFinished => _bodyInputInfo.Count == 6;
 
         public void InsertBodyInputInfo(BodyPartType bodyPartType, BodyInputInfo bodyInputInfo)
         {
