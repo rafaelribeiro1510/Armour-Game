@@ -35,7 +35,9 @@ namespace Body
         [HideInInspector] public TargetBehaviour onTopOfTarget;
         [HideInInspector] public bool inPlace = false;
         [HideInInspector] public bool insideDrawer = true;
-
+        private TargetBehaviour _thisPartsTarget;
+        
+        
         private Camera _camera;
         private Collider2D _collider;
         private Transform _parentTransform;
@@ -63,6 +65,8 @@ namespace Body
                     0.8f : 
                     (BodyType == BodyPartType.LegL || BodyType == BodyPartType.LegR ? 0.3f : 0.35f);
             transform.DOScale(scaleInsideDrawer, 0.00001f);
+
+            _thisPartsTarget = GameObject.Find("Target" + BodyType).GetComponent<TargetBehaviour>();
         }
 
         void Update()
@@ -124,6 +128,15 @@ namespace Body
                     }
                 }
             }
+        }
+
+        [ContextMenu("Place correctly")]
+        public void PlaceCorrectly(BodyInputInfo info)
+        {
+            if (_bodyController.TryPlacing(this, info)) 
+                EaseIntoPlace(_thisPartsTarget.transform.position);
+            else
+                print("Failed to place on target");
         }
 
         public void ReturnToDrawer()

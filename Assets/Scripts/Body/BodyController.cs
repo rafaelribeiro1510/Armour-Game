@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Body.BodyType;
 using Controllers;
+using JetBrains.Annotations;
 using PartCompleteMenu;
 using UnityEngine;
 
@@ -26,8 +27,7 @@ namespace Body
         private BodyPartBehaviour _halfCompletePart;
 
         private PartCompleteScript _partCompleteMenu;
-        [SerializeField] private FinishedBody finishedBodyPhysical;
-        [SerializeField] private FinishedBody finishedBodyDisease;
+        [SerializeField] private FinishedBodyController finishedBody;
 
         private UIGlow _glow;
 
@@ -45,11 +45,11 @@ namespace Body
 
         private void Update()
         {
-            if (finishedBodyPhysical.IsFinished)
+            if (finishedBody.IsFinished)
                 _gameSectionController.MoveToSecondSection();
         }
  
-        public bool TryPlacing(BodyPartBehaviour bodyPart)
+        public bool TryPlacing(BodyPartBehaviour bodyPart, [CanBeNull] BodyInputInfo bodyInputInfo = null)
         {
             if (bodyPart is null) return false;
             
@@ -60,8 +60,11 @@ namespace Body
                     _halfCompletePart.StopGlowing();
                     // Particle FX [Completing]
                     _glow.GlowSuccess();
-                    _partCompleteMenu.Open();
-                    InsertBodyInputInfo();
+                    if (bodyInputInfo is null)
+                    {
+                        _partCompleteMenu.Open();   
+                    }
+                    InsertBodyInputInfo(bodyInputInfo);
                     return true;
                 }
                 else
@@ -98,18 +101,17 @@ namespace Body
             _halfCompletePart = null;
         }
 
-        private void InsertBodyInputInfo()
+        private void InsertBodyInputInfo([CanBeNull] BodyInputInfo bodyInputInfo)
         {
-            StartCoroutine(InsertBodyInputInfo_CO());
+            StartCoroutine(InsertBodyInputInfo_CO(bodyInputInfo));
         }
         
-        private IEnumerator InsertBodyInputInfo_CO()
+        private IEnumerator InsertBodyInputInfo_CO([CanBeNull] BodyInputInfo bodyInputInfo)
         {
-            while (_partCompleteMenu.Result is null) yield return null;
+            while (bodyInputInfo is null && _partCompleteMenu.Result is null) yield return null;
             
-            finishedBodyPhysical.InsertBodyInputInfo(_halfCompletePart.BodyType, _partCompleteMenu.Result); 
-            finishedBodyDisease.InsertBodyInputInfo(_halfCompletePart.BodyType, _partCompleteMenu.Result);
-            
+            finishedBody.InsertBodyInputInfo(_halfCompletePart.BodyType, bodyInputInfo ?? _partCompleteMenu.Result); 
+
             _partCompleteMenu.ResetValues();
             _halfCompletePart = null;
         }

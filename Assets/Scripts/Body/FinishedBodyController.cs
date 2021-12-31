@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using Body.BodyType;
-using DG.Tweening;
-using Target;
-using UI;
-using Unity.Plastic.Newtonsoft.Json;
+﻿using Body.BodyType;
 using UnityEngine;
-using Utils;
 
 namespace Body
 {
@@ -23,6 +15,12 @@ namespace Body
         }
 
         public bool IsFinished => _physicalController.IsFinished && _diseaseController.IsFinished;
+        
+        public void InsertBodyInputInfo(BodyPartType bodyPartType, BodyInputInfo bodyInputInfo)
+        {
+            _physicalController.InsertBodyInputInfo(bodyPartType, bodyInputInfo); 
+            _diseaseController.InsertBodyInputInfo(bodyPartType, bodyInputInfo);
+        }
         
         [ContextMenu("Save Game")]
         public void SaveState()
