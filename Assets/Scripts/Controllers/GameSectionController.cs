@@ -27,12 +27,15 @@ namespace Controllers
 
         private Camera _mainCamera;
 
+        public void MoveToFirstSection()
+        {
+            _mainCamera.transform.DOMove(new Vector3(0, 0, -10), TransitionTime);
+        }
+        
         public void MoveToSecondSection()
         {
             // Slide camera
             _mainCamera.transform.DOMove(new Vector3(SecondSectionX, 0, -10), TransitionTime);
-            
-            
         }
     }
 }

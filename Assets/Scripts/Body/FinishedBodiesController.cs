@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Body.BodyType;
+using Unity.Plastic.Antlr3.Runtime.Misc;
 using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine;
+using Utils;
 
 namespace Body
 {
@@ -13,8 +14,11 @@ namespace Body
     {
         private List<FinishedBody> _controllers;
         private readonly Dictionary<BodyPartType, Dictionary<BodyPartState, BodyPartBehaviour>> _bodyParts = new Dictionary<BodyPartType, Dictionary<BodyPartState, BodyPartBehaviour>>();
-        
+
+        public int saveSlot;
         private readonly Dictionary<BodyPartType, BodyInputInfo> _bodyInputInfo = new Dictionary<BodyPartType, BodyInputInfo>();
+        
+        [SerializeField] private ReturnParameters returnParameters;
         
         void Awake()
         {
@@ -59,54 +63,29 @@ namespace Body
             Directory.CreateDirectory(saveFolder);
 
             var serialized = JsonConvert.SerializeObject(_bodyInputInfo);
-            string destination = saveFolder + "/save_" /* + saveSlot + "_" */ + ".dat";
+            string destination = saveFolder + "/save_" + saveSlot + ".dat";
             File.WriteAllText(destination, serialized);
             print("Saved " + serialized);
         }
 
         [ContextMenu("Load Game")]
-        public void LoadGame()
+        public void LoadGame(Dictionary<BodyPartType, BodyInputInfo> state, Action doAfterHandler)
         {
-            var deserialized = StateFromFile();
             _bodyInputInfo.Clear();
-            StartCoroutine(PlaceParts_CO(deserialized));
+            StartCoroutine(PlaceParts_CO(state, doAfterHandler));
         }
 
-
-        private Dictionary<BodyPartType, BodyInputInfo> StateFromFile()
-        {
-            string destination = Application.persistentDataPath + "/saves/save_" /* + saveSlot + "_" */ + ".dat";
-            try
-            {
-                var fileStream = File.OpenRead(destination);
-                string saveFile;
-                using (StreamReader reader = new StreamReader(fileStream))
-                {
-                    saveFile = reader.ReadToEnd();
-                }
-
-                var deserialized = JsonConvert.DeserializeObject<Dictionary<BodyPartType, BodyInputInfo>>(saveFile);
-                if (deserialized == null) return null;
-                print("Loaded " + deserialized);
-
-                return deserialized;
-            }
-            catch (FileNotFoundException e)
-            {
-                print(e);
-            }
-
-            return null;
-        }
-
-        private IEnumerator PlaceParts_CO(Dictionary<BodyPartType, BodyInputInfo> bodyInputInfos)
+        private IEnumerator PlaceParts_CO(Dictionary<BodyPartType, BodyInputInfo> bodyInputInfos, Action doAfterHandler)
         {
             foreach (KeyValuePair<BodyPartType, BodyInputInfo> pair in bodyInputInfos)
             {
                 _bodyParts[pair.Key][BodyPartState.Physical].PlaceCorrectly(pair.Value);
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(returnParameters.returnDuration / 2);
                 _bodyParts[pair.Key][BodyPartState.Disease].PlaceCorrectly(pair.Value);
+                yield return new WaitForSeconds(returnParameters.returnDuration / 2);
             }
+            
+            doAfterHandler();
         }
     }
 }

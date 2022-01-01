@@ -1,0 +1,18 @@
+{
+    "name": "Save",
+    "references": [
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:a22d0bfd2f86f89489fe485e932fb479",
+        "GUID:9878bc8a0bb58ba409e9871f6dad4d65",
+        "GUID:907304420a121234e8d79e2e2c88872b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
