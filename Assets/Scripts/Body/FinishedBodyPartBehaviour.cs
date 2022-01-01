@@ -14,7 +14,6 @@ namespace Body
         private FinishedBodyPartSprites _spriteController;
         public BodyPartType BodyType;
         private BodyPartState _bodyPartState;
-        private BodyInputInfo _bodyInputInfo;
 
         private StatsScreenController _statsController;
         
@@ -47,10 +46,8 @@ namespace Body
             _statsController = StatsScreenController.Instance;
         }
 
-        public void SetBodyInputInfo(BodyInputInfo bodyInputInfo)
+        public void SetSpriteFromInputInfo(BodyInputInfo bodyInputInfo)
         {
-            _bodyInputInfo = bodyInputInfo;
-            
             _spriteController.SetSprite(BodyType, _bodyPartState, _bodyPartState == BodyPartState.Physical ? bodyInputInfo.SizePhysical : bodyInputInfo.SizeDisease);
             _collider = _spriteController.UpdateCollider();
         }

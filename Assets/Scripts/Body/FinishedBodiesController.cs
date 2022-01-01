@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Body.BodyType;
+using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine;
 
 namespace Body
 {
     public class FinishedBodiesController : MonoBehaviour
     {
-        private FinishedBody _physicalController;
-        private FinishedBody _diseaseController;
+        private List<FinishedBody> _controllers;
         private readonly Dictionary<BodyPartType, Dictionary<BodyPartState, BodyPartBehaviour>> _bodyParts = new Dictionary<BodyPartType, Dictionary<BodyPartState, BodyPartBehaviour>>();
+        
+        private readonly Dictionary<BodyPartType, BodyInputInfo> _bodyInputInfo = new Dictionary<BodyPartType, BodyInputInfo>();
         
         void Awake()
         {
-            var controllers = GetComponentsInChildren<FinishedBody>();
-            _physicalController = controllers[0];
-            _diseaseController = controllers[1];
+            _controllers = GetComponentsInChildren<FinishedBody>().ToList();
         }
 
         private void Start()
@@ -37,25 +38,65 @@ namespace Body
             }
         }
 
-        public bool IsFinished => _physicalController.IsFinished && _diseaseController.IsFinished;
+        public bool IsFinished => _bodyInputInfo.Count == 6;
         
         public void InsertBodyInputInfo(BodyPartType bodyPartType, BodyInputInfo bodyInputInfo, bool skipSave)
         {
-            _physicalController.InsertBodyInputInfo(bodyPartType, bodyInputInfo, skipSave); 
-            _diseaseController.InsertBodyInputInfo(bodyPartType, bodyInputInfo, skipSave);
+            foreach (var controller in _controllers)
+            {
+                controller.InsertBodyInputInfo(bodyPartType, bodyInputInfo);
+            }
+
+            if (!skipSave)
+                SaveGame();
         }
         
         [ContextMenu("Save Game")]
-        public void SaveState()
+        public void SaveGame()
         {
-            _physicalController.SaveState();
+            // Make sure saves folder exists
+            string saveFolder = Application.persistentDataPath + "/saves";
+            Directory.CreateDirectory(saveFolder);
+
+            var serialized = JsonConvert.SerializeObject(_bodyInputInfo);
+            string destination = saveFolder + "/save_" /* + saveSlot + "_" */ + ".dat";
+            File.WriteAllText(destination, serialized);
+            print("Saved " + serialized);
         }
 
         [ContextMenu("Load Game")]
-        public void LoadState()
+        public void LoadGame()
         {
-            var deserialized = _physicalController.LoadState();
+            var deserialized = StateFromFile();
+            _bodyInputInfo.Clear();
             StartCoroutine(PlaceParts_CO(deserialized));
+        }
+
+
+        private Dictionary<BodyPartType, BodyInputInfo> StateFromFile()
+        {
+            string destination = Application.persistentDataPath + "/saves/save_" /* + saveSlot + "_" */ + ".dat";
+            try
+            {
+                var fileStream = File.OpenRead(destination);
+                string saveFile;
+                using (StreamReader reader = new StreamReader(fileStream))
+                {
+                    saveFile = reader.ReadToEnd();
+                }
+
+                var deserialized = JsonConvert.DeserializeObject<Dictionary<BodyPartType, BodyInputInfo>>(saveFile);
+                if (deserialized == null) return null;
+                print("Loaded " + deserialized);
+
+                return deserialized;
+            }
+            catch (FileNotFoundException e)
+            {
+                print(e);
+            }
+
+            return null;
         }
 
         private IEnumerator PlaceParts_CO(Dictionary<BodyPartType, BodyInputInfo> bodyInputInfos)
