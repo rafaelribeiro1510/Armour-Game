@@ -39,10 +39,10 @@ namespace Body
 
         public bool IsFinished => _physicalController.IsFinished && _diseaseController.IsFinished;
         
-        public void InsertBodyInputInfo(BodyPartType bodyPartType, BodyInputInfo bodyInputInfo)
+        public void InsertBodyInputInfo(BodyPartType bodyPartType, BodyInputInfo bodyInputInfo, bool skipSave)
         {
-            _physicalController.InsertBodyInputInfo(bodyPartType, bodyInputInfo); 
-            _diseaseController.InsertBodyInputInfo(bodyPartType, bodyInputInfo);
+            _physicalController.InsertBodyInputInfo(bodyPartType, bodyInputInfo, skipSave); 
+            _diseaseController.InsertBodyInputInfo(bodyPartType, bodyInputInfo, skipSave);
         }
         
         [ContextMenu("Save Game")]

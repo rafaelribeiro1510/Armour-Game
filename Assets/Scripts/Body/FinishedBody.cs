@@ -35,10 +35,13 @@ namespace Body
 
         public bool IsFinished => _bodyInputInfo.Count == 6;
 
-        public void InsertBodyInputInfo(BodyPartType bodyPartType, BodyInputInfo bodyInputInfo)
+        public void InsertBodyInputInfo(BodyPartType bodyPartType, BodyInputInfo bodyInputInfo, bool skipSave)
         {
             _bodyInputInfo.Add(bodyPartType, bodyInputInfo);
             _bodyPartBehaviours[bodyPartType].SetBodyInputInfo(bodyInputInfo);
+            
+            if (!skipSave && bodyPartState == BodyPartState.Physical) // Only one of the bodies executes saving
+                SaveState();
         }
         
         private void FadeAlphaOfChildren(float alpha) {

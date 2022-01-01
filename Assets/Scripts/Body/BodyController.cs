@@ -110,7 +110,7 @@ namespace Body
         {
             while (bodyInputInfo is null && _partCompleteMenu.Result is null) yield return null;
             
-            finishedBodies.InsertBodyInputInfo(_halfCompletePart.BodyType, bodyInputInfo ?? _partCompleteMenu.Result); 
+            finishedBodies.InsertBodyInputInfo(_halfCompletePart.BodyType, bodyInputInfo ?? _partCompleteMenu.Result, bodyInputInfo != null); 
 
             _partCompleteMenu.ResetValues();
             _halfCompletePart = null;
