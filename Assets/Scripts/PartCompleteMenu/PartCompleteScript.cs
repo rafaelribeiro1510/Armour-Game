@@ -45,7 +45,7 @@ namespace PartCompleteMenu
             if (!open) return;
         
             // If some selector isn't ready yet
-            if (_sizeSelectors.Any(sizeSelector => !sizeSelector.ready) /*|| _emotionInputs.Any(emotionInput => !emotionInput.ready)*/) { return; }
+            if (_sizeSelectors.Any(sizeSelector => !sizeSelector.ready) || _emotionInputs.Any(emotionInput => !emotionInput.ready)) { return; }
         
             Result = new BodyInputInfo(
                 _sizeSelectors[0].output, _sizeSelectors[1].output,
