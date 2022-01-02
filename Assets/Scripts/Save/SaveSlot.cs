@@ -61,7 +61,7 @@ namespace Save
         private Dictionary<BodyPartType, BodyInputInfo> StateFromFile()
         {
             string destination = Application.persistentDataPath + "/saves/save_" + index + ".dat";
-            try
+            if (File.Exists(destination))
             {
                 var fileStream = File.OpenRead(destination);
                 string saveFile;
@@ -76,9 +76,9 @@ namespace Save
 
                 return deserialized;
             }
-            catch (FileNotFoundException e)
+            else
             {
-                print(e);
+                print("File doesn't exist: " + destination);
                 return null;
             }
         }
