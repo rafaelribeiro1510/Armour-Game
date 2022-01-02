@@ -1,10 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Body.BodyType;
-using Unity.Plastic.Antlr3.Runtime.Misc;
-using Unity.Plastic.Newtonsoft.Json;
+using Newtonsoft.Json;
 using UnityEngine;
 using Utils;
 
@@ -54,7 +54,7 @@ namespace Body
             if (!skipSave)
                 SaveGame();
         }
-        
+
         [ContextMenu("Save Game")]
         public void SaveGame()
         {
