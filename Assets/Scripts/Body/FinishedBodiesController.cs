@@ -46,6 +46,8 @@ namespace Body
         
         public void InsertBodyInputInfo(BodyPartType bodyPartType, BodyInputInfo bodyInputInfo, bool skipSave)
         {
+            _bodyInputInfo[bodyPartType] = bodyInputInfo;
+
             foreach (var controller in _controllers)
             {
                 controller.InsertBodyInputInfo(bodyPartType, bodyInputInfo);
