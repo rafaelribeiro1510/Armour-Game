@@ -34,13 +34,13 @@ namespace Save
                 var n = Environment.NewLine;
                 var attributes =
                     "Gender:" + n +
-                    "Percentage: ";
+                    "Progress: ";
 
-                var percentage = (saveInfo.Count / 6 * 100) + "%" ;
+                var progress = saveInfo.Count + " / 6";
             
                 var values =
                     "Female"   + n +
-                    percentage + n;
+                    progress + n;
 
                 _attributesTMP.text = attributes;
                 _valuesTMP.text = values;
