@@ -21,6 +21,7 @@ namespace PartCompleteMenu
 
         private TouchScreenKeyboard _keyboard;
         
+        private bool _clicked = false;
         [HideInInspector] public bool ready;
         [HideInInspector] public string output;
 
@@ -58,22 +59,32 @@ namespace PartCompleteMenu
                 if (_col == Physics2D.OverlapPoint(touchPos))
                 {
                     _keyboard = TouchScreenKeyboard.Open(_textBox.text != placeholderText ? _textBox.text : "", TouchScreenKeyboardType.Default);
+                    _clicked = true;
                 }
             }
 
-            if (_keyboard != null && (_keyboard.status == TouchScreenKeyboard.Status.Done ||
-                                      _keyboard.status == TouchScreenKeyboard.Status.LostFocus))
+            if (_keyboard != null && _clicked && (_keyboard.status == TouchScreenKeyboard.Status.Done ||
+                                                  _keyboard.status == TouchScreenKeyboard.Status.LostFocus))
             {
-                _textBox.color = Color.black;
-                _textBox.text = _keyboard.text;
-                ready = true;
-                output = _textBox.text;
+                if (_keyboard.text == "")
+                {   
+                    ResetValues();
+                }
+                else
+                {
+                    _textBox.color = Color.black;
+                    _textBox.text = _keyboard.text;
+                    ready = true;
+                    _clicked = false;
+                    output = _textBox.text;   
+                }
             }
         }
 
         public void ResetValues()
         {
             ready = false;
+            _clicked = false;
             _textBox.text = placeholderText;
             _textBox.color = Color.grey;
         }
