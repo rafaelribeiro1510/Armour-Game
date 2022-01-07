@@ -44,14 +44,11 @@ namespace Body
             // Handle OverlapBodiesButton changes (only run once when button is clicked)
             if (_localSplitFlag == _splitBodiesButton.isOverlapping) return;
 
-            var displacementX = 0f;
-            if (bodyPartState == BodyPartState.Physical)
+            var displacementX = 4f;
+            if ((bodyPartState == BodyPartState.Physical && _splitBodiesButton.isOverlapping) ||
+                (bodyPartState == BodyPartState.Disease && !_splitBodiesButton.isOverlapping))
             {
-                displacementX = _splitBodiesButton.isOverlapping ? -4.3f : 4.3f;
-            }
-            else if (bodyPartState == BodyPartState.Disease)
-            {
-                displacementX = _splitBodiesButton.isOverlapping ? 4.3f : -4.3f;
+                displacementX *= -1;
             }
 
             // Translate body
