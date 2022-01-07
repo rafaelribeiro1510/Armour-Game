@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using UI;
 using UnityEngine;
 
 namespace Controllers
@@ -19,6 +20,8 @@ namespace Controllers
         private const float SecondSectionX = 25;
         private const float TransitionTime = 1.5f;
 
+        private int _currSection = 0;
+
         private void Awake()
         {
             SingletonInitialization();
@@ -29,13 +32,23 @@ namespace Controllers
 
         public void MoveToFirstSection()
         {
+            if (_currSection > 0) return;
+            _currSection++;
+
+            // Slide camera
             _mainCamera.transform.DOMove(new Vector3(0, 0, -10), TransitionTime);
         }
         
         public void MoveToSecondSection()
         {
+            if (_currSection > 1) return;
+            _currSection++;
+
             // Slide camera
             _mainCamera.transform.DOMove(new Vector3(SecondSectionX, 0, -10), TransitionTime);
+            
+            // Set Emotion Texts TODO find cleaner way of triggering this
+            GameObject.Find("EmotionBoxes").GetComponent<EmotionBoxes>().SetTexts();
         }
     }
 }

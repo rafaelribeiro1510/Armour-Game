@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Body.BodyType;
 using Newtonsoft.Json;
+using UI;
 using UnityEngine;
 using Utils;
 
@@ -15,6 +16,10 @@ namespace Body
         private List<FinishedBody> _controllers;
         private readonly Dictionary<BodyPartType, Dictionary<BodyPartState, BodyPartBehaviour>> _bodyParts = new Dictionary<BodyPartType, Dictionary<BodyPartState, BodyPartBehaviour>>();
 
+        private SplitBodiesButton _splitBodiesButton;
+        private bool _oldIsOverlapping;
+        private EmotionBoxes _emotionBoxes;
+
         public int saveSlot;
         private readonly Dictionary<BodyPartType, BodyInputInfo> _bodyInputInfo = new Dictionary<BodyPartType, BodyInputInfo>();
         
@@ -23,6 +28,10 @@ namespace Body
         void Awake()
         {
             _controllers = GetComponentsInChildren<FinishedBody>().ToList();
+            _splitBodiesButton = SplitBodiesButton.Instance;
+            _oldIsOverlapping = _splitBodiesButton.isOverlapping;
+            _emotionBoxes = GetComponentInChildren<EmotionBoxes>();
+            _emotionBoxes.BodyInputInfo = _bodyInputInfo;
         }
 
         private void Start()
@@ -40,6 +49,14 @@ namespace Body
                 else 
                     _bodyParts[bodyPartBehaviour.BodyType][bodyPartBehaviour.BodyPartState] = bodyPartBehaviour;
             }
+        }
+
+        private void Update()
+        {
+            if (_splitBodiesButton.isOverlapping == _oldIsOverlapping) return;
+
+            _oldIsOverlapping = _splitBodiesButton.isOverlapping;
+            _emotionBoxes.ToggleVisible();
         }
 
         public bool IsFinished => _bodyInputInfo.Count == 6;

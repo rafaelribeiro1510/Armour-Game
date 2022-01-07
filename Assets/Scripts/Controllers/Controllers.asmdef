@@ -1,3 +1,15 @@
-﻿{
-	"name": "Controllers"
+{
+    "name": "Controllers",
+    "references": [
+        "GUID:327eb1b51e5834540875d4c7eb659cdd"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

@@ -64,7 +64,8 @@ namespace Body
                     {
                         if (_collider == Physics2D.OverlapPoint(touchPos))
                         {
-                            _statsController.SetBodyType(BodyType);
+                            // TODO When stats are done, uncomment here
+                            // _statsController.SetBodyType(BodyType);
                         }
                         
                         break;   
