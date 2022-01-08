@@ -11,6 +11,12 @@
 
 # Gameplay
 
+![gameplay-1](/media/gameplay-1.gif)
+
+![gameplay-2](/media/gameplay-2.gif)
+
+![results](/media/results.gif)
+
 # Instalation
 
 To try the app in an android device, download and install the `build.apk` from the latest [release](https://github.com/up201806330/Armour-Game/releases).
