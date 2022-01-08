@@ -54,3 +54,6 @@ TagManager:
   - name: Menu
     uniqueID: 423554701
     locked: 0
+  - name: Effects
+    uniqueID: 413742873
+    locked: 0
