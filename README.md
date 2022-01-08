@@ -5,7 +5,7 @@
 - **Environment:** Unity
 - **Tools:** C#, Unity
 - **Group members:**
--   - [Isabel Quaresma]()(Art)
+-   - [Isabel Quaresma](https://www.behance.net/mi_quaresma)(Art)
     - [Rafael Soares Ribeiro](https://github.com/up201806330) ([up201806330@fe.up.pt](mailto:up201806330@fe.up.pt))(Code)
     - [Viviane Peçaibes]()(Design & Coordianation)
 
