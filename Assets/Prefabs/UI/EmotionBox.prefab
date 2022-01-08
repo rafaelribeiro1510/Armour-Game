@@ -54,7 +54,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bodyPartType: 0
   bodyPartState: 1
-  activeColor: {r: 0.32941177, g: 0.72156864, b: 0.7529412, a: 1}
+  activeColor: {r: 0.26415092, g: 0.26415092, b: 0.26415092, a: 1}
   defaultColor: {r: 0.5294118, g: 0.5294118, b: 0.5294118, a: 1}
 --- !u!23 &3068875129078644222
 MeshRenderer:

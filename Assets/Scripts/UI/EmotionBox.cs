@@ -53,10 +53,12 @@ namespace UI
         {
             _text = text;
             _tmp.text = bodyPartType.ToString();
+            _sprite.color = new Color(defaultColor.r, defaultColor.g, defaultColor.b, 0);
         }
 
         public void ToggleVisible()
         {
+            // Fade alpha of sprite & text
             if (_sprite.color.a > 0 && _sprite.color.a < 1) return;
             var targetA = Math.Abs(1 - _sprite.color.a);
             _sprite.DOFade(targetA, FadeDuration);
