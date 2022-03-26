@@ -5,8 +5,8 @@
 - **Environment:** Unity
 - **Tools:** C#, Unity
 - **Group members:**
--   - [Isabel Quaresma](https://www.behance.net/mi_quaresma)(Art)
-    - [Rafael Soares Ribeiro](https://github.com/up201806330) ([up201806330@fe.up.pt](mailto:up201806330@fe.up.pt))(Code)
+    - [Isabel Quaresma](https://www.behance.net/mi_quaresma) (Art)
+    - [Rafael Soares Ribeiro](https://github.com/up201806330) ([up201806330@fe.up.pt](mailto:up201806330@fe.up.pt)) (Code)
     - [Viviane Peçaibes]() ([vivianepecaibes@gmail.com](mailto:vivianepecaibes@gmail.com)) (Design & Coordianation)
 
 **Note:** This project is funded by national funds through FCT - Fundação para a Ciência e a Tecnologia, I.P, in the scope of the contract SFRH/BD/145986/2019.
